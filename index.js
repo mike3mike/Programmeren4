@@ -24,27 +24,25 @@ app.post("/api/register", (req, res, next) => {
     next();
 })
 
-function compare(a, b) {
-    if (a.emailAddress < b.emailAddress)
-        return -1;
-    if (a.emailAddress > b.emailAddress)
-        return 1;
-    return 0;
-}
-
 app.get("/api/user", (req, res, next) => {
-    let parameters = Object.keys(req.query);
+    let parameters = Object.entries(req.query);
     let columns = ["firstName", "lastName", "street", "city", "emailAddress", "password", "phoneNumber"];
-    let invalidParameter;
-    parameters.forEach((parameter) => {
-        if (columns.indexOf(parameter) == -1 && !invalidParameter) {
+    let correctParameters = [];
+    parameters.forEach(([key, value]) => {
+        if (columns.indexOf(key) == -1) {
             res.status(200).json([]);
-            invalidParameter = true;
+        } else {
+            correctParameters.push([key, value]);
         }
     })
-    if (!invalidParameter) {
-        res.status(200).json(database.users.sort(compare));
+    if (parameters.length == correctParameters.length) {
+        if (correctParameters.length == 1) {
+            res.status(200).json(database.users.filter(i => i[correctParameters[0][0]] == correctParameters[0][1]));
+        } else if (correctParameters.length == 2) {
+            res.status(200).json(database.users.filter(i => i[correctParameters[0][0]] == correctParameters[0][1] && i[correctParameters[1][0]] == correctParameters[1][1]));
+        }
     }
+    next();
 })
 
 app.use("*", (req, res, next) => {
