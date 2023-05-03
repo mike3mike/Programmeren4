@@ -1,51 +1,44 @@
-const User = require('./User.js');
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
-app.use(bodyParser.raw({ inflate: true, limit: '100kb', type: 'application/json' }));
-// app.use(express.json());
+const bodyParser = require('body-parser');
+// app.use(bodyParser.raw({ inflate: true, limit: '100kb', type: 'application/json' }));
+app.use(express.json());
 const port = 3000;
-const Database = require('./Database.js');
-let database = new Database();
 
-app.post("/api/register", (req, res, next) => {
-    let json = JSON.parse(req.body);
-    try {
-        let user = new User(database, json.firstName, json.lastName, json.street, json.city, json.emailAddress, json.password, json.phoneNumber, json.phoneNumber);
-        database.users.push(user);
-        res.json({
-            data: user
-        });
-    } catch (e) {
-        res.status(422).json({
-            error: e.message
-        });
+const User = require('./objects/User');
+// The documentation says that there is no account information for the logged in user in the body, so for now it is hardcoded
+loggedInUser = new User({
+    id: 139,
+    firstName: "Mike", 
+    lastName: "Leijten", 
+    street: "Teststreet", 
+    city: "Testcity", 
+    emailAddress: "m.leijten3@student.avans.nl", 
+    password: "Testtest123", 
+    phoneNumber: "0612345678"
+});
+
+const userRouter = require('./routes/user.routes');
+app.use("/api/user", userRouter);
+
+app.use((err, req, res, next) => {
+    if (err.code != undefined) {
+        console.log("Error: " + err.code);
+    } else {
+        console.log(err);
     }
-    next();
-})
-
-app.get("/api/user", (req, res, next) => {
-    let parameters = Object.entries(req.query);
-    let columns = ["firstName", "lastName", "street", "city", "emailAddress", "password", "phoneNumber"];
-    let correctParameters = [];
-    parameters.forEach(([key, value]) => {
-        if (columns.indexOf(key) == -1) {
-            res.status(200).json([]);
+    if (!res.headersSent) {
+        if (err.status) {
+            res.status(err.status).send();
         } else {
-            correctParameters.push([key, value]);
-        }
-    })
-    if (parameters.length == correctParameters.length) {
-        if (correctParameters.length == 1) {
-            res.status(200).json(database.users.filter(i => i[correctParameters[0][0]] == correctParameters[0][1]));
-        } else if (correctParameters.length == 2) {
-            res.status(200).json(database.users.filter(i => i[correctParameters[0][0]] == correctParameters[0][1] && i[correctParameters[1][0]] == correctParameters[1][1]));
+            res.status(500).send();
         }
     }
-    next();
+    
 })
 
-app.use("*", (req, res, next) => {
+app.use((req, res) => {
+    console.log("Status Code: 404");
     res.status(404).end();
 })
 

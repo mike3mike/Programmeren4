@@ -1,30 +1,30 @@
 class User {
-
-    constructor(database, firstName, lastName, street, city, emailAddress, password, phoneNumber) {
-        this.id = database.users.length + 1;
+    constructor({id, firstName, lastName, street, city, isActive, emailAddress, password, phoneNumber}) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
         this.city = city;
-        this.setEmailAddress(database, emailAddress);
+        this.isActive = isActive;
+        this.setEmailAddress(emailAddress);
         this.setPassword(password);
         this.setPhoneNumber(phoneNumber);
     }
 
-    setEmailAddress(database, emailAddress) {
-        if (this.checkEmailAddress(database, emailAddress) == true) { 
+    setEmailAddress(emailAddress) {
+        if (this.checkEmailAddress(emailAddress) == true) { 
             this.emailAddress =  emailAddress;
         }
     }
 
-    checkEmailAddress(database, emailAddress) {
+    checkEmailAddress(emailAddress) {
         let match = String(emailAddress)
         .toLowerCase()
         .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>    ()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
-        let alreadyExists = database.users.filter(u => u.emailAddress === emailAddress).length > 0;
-        if (match == null || alreadyExists) { throw new Error("Wrong email address"); }
+        // The database checks if the emailAddress already exists
+        if (match == null) { throw new Error("Wrong email address: " + emailAddress); }
         return true;
     }
     
@@ -38,12 +38,16 @@ class User {
         .match(
             /^[0-9]{10}$/
         );
-        if (match == null) { throw new Error("Wrong phonenumber"); }
+        if (match == null) { 
+            let error = new Error("Wrong phonenumber");
+            error.status = 400
+            throw error;
+        }
         return true;
     }
 
     setPassword(password) {
-        if (this.checkPassword(password) != true) { return }
+        if (this.checkPassword(password) != true) { return null }
         let crypto = require('crypto');
         let salt = crypto.randomBytes(128).toString('base64');
         let hash = crypto.createHash('md5').update(password + salt).digest('hex');
