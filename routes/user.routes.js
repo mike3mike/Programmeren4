@@ -1,20 +1,28 @@
 const express = require('express');
-const router = express.Router();
+const authController = require('../controllers/auth.controller');
 const userController = require('../controllers/user.controller');
+const router = express.Router();
+
+router.post('/login', authController.login, userController.login)
+
+const userRouter = express.Router();
+router.use('/user', userRouter);
 
 // UC-201
-router.post('', userController.registerUser)
+userRouter.post('', userController.registerUser)
 // UC-202
-router.get('', userController.getUserList)
+userRouter.get('', userController.getUserList)
 
 // UC-203
-router.get("/profile", userController.getProfile)
+userRouter.get("/profile", authController.login, userController.getProfile)
 
 // UC-204
-router.get("/:userId", userController.getProfileById)
+userRouter.get("/:userId", authController.validate, userController.getProfileById)
 // UC-205
-router.put("/:userId", userController.updateUser)
+userRouter.put("/:userId", authController.login, userController.updateUser)
 // UC-206
-router.delete("/:userId", userController.deleteUser)
+userRouter.delete("/:userId", authController.login, userController.deleteUser)
 
+
+module.exports = userRouter;
 module.exports = router;
