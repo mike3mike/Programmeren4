@@ -5,36 +5,34 @@ const bodyParser = require('body-parser');
 app.use(express.json());
 const port = 3000;
 
-const User = require('./objects/User');
-// The documentation says that there is no account information for the logged in user in the body, so for now it is hardcoded
-loggedInUser = new User({
-    id: 139,
-    firstName: "Mike", 
-    lastName: "Leijten", 
-    street: "Teststreet", 
-    city: "Testcity", 
-    emailAddress: "m.leijten3@student.avans.nl", 
-    password: "Testtest123", 
-    phoneNumber: "0612345678"
-});
-
 const userRouter = require('./routes/user.routes');
-app.use("/api/user", userRouter);
+app.use("/api", userRouter);
 
 app.use((err, req, res, next) => {
     if (err.code != undefined) {
-        console.log("Error: " + err.code);
+        console.log("Error code: " + err.code);
     } else {
         console.log(err);
     }
     if (!res.headersSent) {
         if (err.status) {
-            res.status(err.status).send();
+            res.status(err.status).json(
+                {
+                    errCode: err.code,
+                    errMessage: err.message
+                }
+            );
+        } else if (err.code || err.message) {
+            res.status(500).json(
+                {
+                    errCode: err.code,
+                    errMessage: err.message
+                }
+            );
         } else {
             res.status(500).send();
         }
     }
-    
 })
 
 app.use((req, res) => {
