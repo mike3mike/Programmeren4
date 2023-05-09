@@ -51,7 +51,8 @@ module.exports = {
             } else {
                 next("Something is wrong with your JWT token.");
             };
+       } else {
+            next("Include a bearer token in the authorization header. The format is 'Bearer {JWT token}'.");
        }
-       return false;
     }
 };
