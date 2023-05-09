@@ -1,14 +1,22 @@
 class User {
-    constructor({id, firstName, lastName, street, city, isActive, emailAddress, password, phoneNumber}) {
+    // id;
+    // isActive;
+
+    constructor({ id, firstName, lastName, street, city, isActive, emailAddress, password, passwordHash, passwordSalt, phoneNumber }) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
         this.city = city;
         this.isActive = isActive;
-        this.setEmailAddress(emailAddress);
-        this.setPassword(password);
-        this.setPhoneNumber(phoneNumber);
+        if (password) { 
+            this.setPassword(password); 
+        } else if (passwordHash && passwordSalt) {
+            this.passwordHash = passwordHash;
+            this.passwordSalt = passwordSalt;
+        }
+        if (emailAddress) this.setEmailAddress(emailAddress);
+        if (phoneNumber) this.setPhoneNumber(phoneNumber);
     }
 
     setEmailAddress(emailAddress) {
@@ -24,7 +32,12 @@ class User {
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
         // The database checks if the emailAddress already exists
-        if (match == null) { throw new Error("Wrong email address: " + emailAddress); }
+        // if (match == null) { throw new Error("Wrong email address: " + emailAddress); }
+        if (match == null) { 
+            let error = new Error("Wrong email address: " + emailAddress);
+            error.status = 400
+            throw error;
+        }
         return true;
     }
     
@@ -51,7 +64,8 @@ class User {
         let crypto = require('crypto');
         let salt = crypto.randomBytes(128).toString('base64');
         let hash = crypto.createHash('md5').update(password + salt).digest('hex');
-        this.password = [hash, salt];
+        this.passwordSalt = salt;
+        this.passwordHash = hash;
     }
 
     checkPassword(password) {
@@ -60,13 +74,31 @@ class User {
         .match(
             /^[a-z,A-Z].*/
         );
-        if (match == null) { throw new Error("Wrong password"); }
+        if (match == null) { 
+            let error = new Error("Wrong password: " + password);
+            error.status = 400
+            throw error;
+        }
         return true;
     }
 
     comparePassword(passwordAttempt) {
         let crypto = require('crypto');
-        return crypto.createHash('md5').update(passwordAttempt + this.password[1]).digest('hex') == this.password[0];
+        if (crypto.createHash('md5').update(passwordAttempt + this.passwordSalt).digest('hex') == this.passwordHash) {
+            require('dotenv').config();
+            let secret = process.env.JWT_SECRET;
+            var jwt = require('jsonwebtoken');
+            var token = jwt.sign({ userId: this.id }, secret);
+            return token;
+        };
+        throw new Error("Wrong password");
+    }
+
+    setJWTtoken(passwordAttempt) {
+        let jwtToken = this.comparePassword(passwordAttempt);
+        if (jwtToken) {
+            this.jwtToken = jwtToken;
+        }
     }
 }
 
