@@ -17,9 +17,6 @@ insertQueries = insertUserQuery + insertMealQuery;
 describe('UC-201', () => {
     beforeEach(() => {
         pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                next(connectionError);
-            }
             if (conn) {
                 conn.query(
                     deleteQueries + insertQueries
