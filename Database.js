@@ -2,7 +2,7 @@ const conn = require('mysql2');
 require('dotenv').config();
 
 const pool = conn.createPool({
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || '127.0.0.1',
     user: process.env.DB_USER || 'root',
     database: process.env.DB_DATABASENAME || 'share_a_meal',
     database: process.env.DB_PASSWORD || 'root',
