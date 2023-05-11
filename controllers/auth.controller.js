@@ -4,8 +4,8 @@ module.exports = {
         let password = req.body.password;
         const User = require('../objects/User');
         // Used to check emailAdress and password validity
-        new User({emailAdress: emailAdress, password: password});
-        if (emailAdress == null){
+        new User({ emailAdress: emailAdress, password: password });
+        if (emailAdress == null) {
             let error = new Error("emailAdress is required");
             error.status = 400
             next(error);
@@ -22,7 +22,7 @@ module.exports = {
                     [emailAdress],
                     function (queryError, results, fields) {
                         if (queryError) return null;
-                        if (results.length == 0){
+                        if (results.length == 0) {
                             let error = new Error("User does not exist");
                             error.status = 404
                             next(error);
@@ -41,18 +41,21 @@ module.exports = {
 
     validate(req, res, next) {
         let authHeader = req.headers.authorization;
-        if (authHeader.startsWith("Bearer ")){
+        if (authHeader.startsWith("Bearer ")) {
             let reqJWTtoken = authHeader.substring(7, authHeader.length);
             var jwt = require('jsonwebtoken');
             jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
             console.log("Validated id: " + jwt.id);
             if (jwt.id) {
+                let user = new User();
+                user.id = jwt.id;
+                req.user = user;
                 next()
             } else {
                 next("Something is wrong with your JWT token.");
             };
-       } else {
-            next("Include a bearer token in the authorization header. The format is 'Bearer {JWT token}'.");
-       }
+        } else {
+            next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {JWT token}'." });
+        }
     }
 };

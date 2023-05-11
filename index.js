@@ -9,11 +9,11 @@ const userRouter = require('./routes/user.routes');
 app.use("/api", userRouter);
 
 app.use((err, req, res, next) => {
-    if (err.code != undefined) {
-        console.log("Error code: " + err.code);
-    } else {
-        console.log(err);
-    }
+    // if (err.code != undefined) {
+    //     console.log("Error code: " + err.code);
+    // } else {
+    //     console.log(err);
+    // }
     if (!res.headersSent) {
         if (err.status) {
             res.status(err.status).json(

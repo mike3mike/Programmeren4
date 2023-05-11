@@ -17,9 +17,9 @@ const userController = {
             let userEntries = Object.entries(user);
             let userValuesWithoutNull = userEntries.filter(value => value[1] != undefined);
             userValuesWithoutNull = Object.fromEntries(userValuesWithoutNull);
-            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAdress`, `passwordHash`, `passwordSalt`, `phoneNumber`];
+            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAdress`, `password`, `phoneNumber`];
             let columnsWithValues = {};
-            let everyColumnPresent = columns.flat().every((element) => {
+            let everyColumnPresent = columns.every((element) => {
                 let count = Object.keys(userValuesWithoutNull).filter(i => i == element).length;
                 if (count == 1) {
                     columnsWithValues[element] = userValuesWithoutNull[element];
@@ -54,7 +54,9 @@ const userController = {
                     }
                 });
             } else {
-                next("Not every required attribute is present");
+                let error = new Error("Not every required attribute is present");
+                error.status = 400;
+                next(error);
             }
         } catch (e) {
             let error = new Error(e.message);
@@ -120,8 +122,7 @@ const userController = {
 
     getProfileById: (req, res, next) => {
         var paramId = req.params.userId;
-        let reqJWTtoken = req.headers.authorization.substring(7, req.headers.authorization.length);
-        let loggedInUserId = parseJwt(reqJWTtoken).id;
+        let loggedInUserId = req.user.id;
         pool.getConnection(function (err, conn) {
             if (err) { next(err); }
             if (conn) {
@@ -131,8 +132,7 @@ const userController = {
                         if (err) { next(err) } else {
                             results.forEach(record => {
                                 if (record.userId != loggedInUserId){
-                                    record.passwordHash = "";
-                                    record.passwordSalt = "";
+                                    record.password = "";
                                 }
                             });
                             if (results.length == 0){
@@ -155,7 +155,6 @@ const userController = {
         pool.getConnection(function (err, conn) {
             if (err) { next(err); }
             let loggedInUser = req.user;
-            console.log(loggedInUser);
             if (conn) {
                 conn.query(
                     'SELECT m.* FROM `user` LEFT JOIN meal_participants_user mpu ON mpu.userId = user.id LEFT JOIN meal m ON m.id = mpu.mealId WHERE user.id = ' + loggedInUser.id,
@@ -192,7 +191,7 @@ const userController = {
                 case "id":
                     break;
                 case "emailAdress":
-                    loggedInUser.setemailAdress(value);
+                    loggedInUser.setEmailAdress(value);
                     break;
                 case "phoneNumber":
                     loggedInUser.setPhoneNumber(value);
@@ -205,7 +204,7 @@ const userController = {
             if (err) { next(err) }
             if (conn) {
                 let query = 'UPDATE `user` SET ';
-                let columns = ["firstName", "lastName", "street", "city", "emailAdress", "passwordHash", "passwordSalt", "phoneNumber"];
+                let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber"];
                 columns.forEach((columnName) => {
                     query += columnName + " = '" + loggedInUser[columnName] + "',\r\n";
                 })
@@ -244,7 +243,7 @@ const userController = {
             throw error;
         }
         pool.getConnection(function (err, conn) {
-            if (err) { console.log('error', err); }
+            if (err) { next(err) }
             if (conn) {
                 let query = 'DELETE FROM `user` WHERE id = ?';
                 conn.query(

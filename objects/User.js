@@ -2,7 +2,7 @@ class User {
     // id;
     // isActive;
 
-    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber }) {
+    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber, jwtToken }) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -11,28 +11,33 @@ class User {
         this.isActive = isActive;
         if (password) { 
             this.setPassword(password); 
-        } else if (passwordHash && passwordSalt) {
-            this.passwordHash = passwordHash;
-            this.passwordSalt = passwordSalt;
-        }
-        if (emailAdress) this.setemailAdress(emailAdress);
+        } 
+        // else if (passwordHash && passwordSalt) {
+        //     this.password = [passwordHash, passwordSalt].join(".");
+        // }
+        if (emailAdress) this.setEmailAdress(emailAdress);
         if (phoneNumber) this.setPhoneNumber(phoneNumber);
+        this.jwtToken = this.jwtToken;
     }
 
-    setemailAdress(emailAdress) {
-        if (this.checkemailAdress(emailAdress) == true) { 
+    setEmailAdress(emailAdress) {
+        if (this.checkEmailAdress(emailAdress) == true) { 
             this.emailAdress =  emailAdress;
         }
     }
 
-    checkemailAdress(emailAdress) {
+    checkEmailAdress(emailAdress) {
+        // let match = String(emailAdress)
+        // .toLowerCase()
+        // .match(
+        //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        // );
         let match = String(emailAdress)
         .toLowerCase()
         .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            /^[a-z]{1,}@[a-z]{2,}\.[a-z]{2,3}$/gm
         );
         // The database checks if the emailAdress already exists
-        // if (match == null) { throw new Error("Wrong email address: " + emailAdress); }
         if (match == null) { 
             let error = new Error("Wrong email address: " + emailAdress);
             error.status = 400
@@ -61,11 +66,11 @@ class User {
 
     setPassword(password) {
         if (this.checkPassword(password) != true) { return null }
-        let crypto = require('crypto');
-        let salt = crypto.randomBytes(128).toString('base64');
-        let hash = crypto.createHash('md5').update(password + salt).digest('hex');
-        this.passwordSalt = salt;
-        this.passwordHash = hash;
+        // let crypto = require('crypto');
+        // let salt = crypto.randomBytes(128).toString('base64');
+        // let hash = crypto.createHash('md5').update(password + salt).digest('hex');
+        // this.password = [hash, salt].join(".");
+        this.password = password;
     }
 
     checkPassword(password) {
@@ -83,16 +88,31 @@ class User {
     }
 
     comparePassword(passwordAttempt) {
-        let crypto = require('crypto');
-        if (crypto.createHash('md5').update(passwordAttempt + this.passwordSalt).digest('hex') == this.passwordHash) {
+        if (passwordAttempt == this.password) {
             require('dotenv').config();
             let secret = process.env.JWT_SECRET;
             var jwt = require('jsonwebtoken');
             var token = jwt.sign({ userId: this.id }, secret);
             return token;
-        };
+        }
+        // let crypto = require('crypto');
+        // if (crypto.createHash('md5').update(passwordAttempt + this.getPasswordSalt()).digest('hex') == this.getPasswordHash()) {
+        //     require('dotenv').config();
+        //     let secret = process.env.JWT_SECRET;
+        //     var jwt = require('jsonwebtoken');
+        //     var token = jwt.sign({ userId: this.id }, secret);
+        //     return token;
+        // };
         throw new Error("Wrong password");
     }
+
+    // getPasswordHash() {
+    //     return this.password.split('.')[0];
+    // }
+
+    // getPasswordSalt() {
+    //     return this.password.split('.')[1];
+    // }
 
     setJWTtoken(passwordAttempt) {
         let jwtToken = this.comparePassword(passwordAttempt);
