@@ -27,16 +27,16 @@ class User {
     }
 
     checkEmailAdress(emailAdress) {
-        // let match = String(emailAdress)
-        // .toLowerCase()
-        // .match(
-        //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        // );
         let match = String(emailAdress)
         .toLowerCase()
         .match(
-            /^[a-z]{1,}@[a-z]{2,}\.[a-z]{2,3}$/gm
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
+        // let match = String(emailAdress)
+        // .toLowerCase()
+        // .match(
+        //     /^[a-z]{1,}@[a-z]{2,}\.[a-z]{2,3}$/gm
+        // );
         // The database checks if the emailAdress already exists
         if (match == null) { 
             let error = new Error("Wrong email address: " + emailAdress);
