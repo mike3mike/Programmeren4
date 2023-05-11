@@ -74,6 +74,7 @@ class User {
     }
 
     checkPassword(password) {
+        password = password.replace(' ', '').replace('-', '');
         let match = String(password)
         .toLowerCase()
         .match(
