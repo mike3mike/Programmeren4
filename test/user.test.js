@@ -130,9 +130,6 @@ describe('UC-201', () => {
 describe('UC-202', () => {
     beforeEach(() => {
         pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                next(connectionError);
-            }
             if (conn) {
                 conn.query(
                     deleteQueries + insertQueries
@@ -204,9 +201,6 @@ describe('UC-202', () => {
 // describe('UC-203', () => {
 //     beforeEach(() => {
 //         pool.getConnection(function (connectionError, conn) {
-//             if (connectionError) {
-//                 next(connectionError);
-//             }
 //             if (conn) {
 //                 conn.query(
 //                     deleteQueries + insertQueries
@@ -244,9 +238,6 @@ describe('UC-202', () => {
 describe('UC-204', () => {
         beforeEach(() => {
         pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                next(connectionError);
-            }
             if (conn) {
                 conn.query(
                     deleteQueries + insertQueries
@@ -287,9 +278,6 @@ describe('UC-204', () => {
 describe('UC-205', () => {
     beforeEach(() => {
         pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                next(connectionError);
-            }
             if (conn) {
                 conn.query(
                     deleteQueries + insertQueries
@@ -352,7 +340,7 @@ describe('UC-205', () => {
         chai
         .request(server)
         .put("/api/user/2386")
-        .send({emailAdress: "mikeleijten1@gmail.com", password: "Testtest123", street: "aStreet"})
+        .send({emailAdress: "mikeleijten1@gmail.com", password: "asdfls", street: "aStreet"})
         .end((err, res) => {
             res.status.should.equals(404);
             res.body.errMessage.should.equal("User does not exist") || res.body.errMessage.should.equal("emailAdress is required");
@@ -378,7 +366,7 @@ describe('UC-206', () => {
         chai
             .request(server)
             .delete("/api/user/2399")
-            .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+            .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
                 res.body.errMessage.should.equal("User does not exist");
