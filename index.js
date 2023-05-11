@@ -9,6 +9,7 @@ const userRouter = require('./routes/user.routes');
 app.use("/api", userRouter);
 
 app.use((err, req, res, next) => {
+    console.log(err);
     // if (err.code != undefined) {
     //     console.log("Error code: " + err.code);
     // } else {
