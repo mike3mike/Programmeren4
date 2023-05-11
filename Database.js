@@ -2,9 +2,9 @@ const conn = require('mysql2');
 require('dotenv').config();
 
 const pool = conn.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    database: process.env.DB_DATABASENAME,
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    database: process.env.DB_DATABASENAME || 'share_a_meal',
     waitForConnections: true,
     multipleStatements: true,
     connectionLimit: 10,
