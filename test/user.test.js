@@ -36,7 +36,7 @@ describe('UC-201', () => {
                 lastName: "Leijten",
                 street: "De Dorsvlegel",
                 city: "Tilburg",
-                emailAddress: "@mike@gmail.com",
+                emailAdress: "@mike@gmail.com",
                 password: "Testtest123",
                 phoneNumber: "0615601357"
             })
@@ -57,7 +57,7 @@ describe('UC-201', () => {
                 lastName: "Leijten",
                 street: "De Dorsvlegel",
                 city: "Tilburg",
-                emailAddress: "mikeleijten1@gmail.com",
+                emailAdress: "mikeleijten1@gmail.com",
                 password: "2Testtest123",
                 phoneNumber: "0615601357"
             })
@@ -77,7 +77,7 @@ describe('UC-201', () => {
                 lastName: "Leijten",
                 street: "De Dorsvlegel",
                 city: "Tilburg",
-                emailAddress: "m.leijten37@student.avans.nl",
+                emailAdress: "m.leijten37@student.avans.nl",
                 password: "Testtest123",
                 phoneNumber: "0615601357"
             })
@@ -98,7 +98,7 @@ describe('UC-201', () => {
                 lastName: "Leijten",
                 street: "Teststreet",
                 city: "Breda",
-                emailAddress: "mike34akklsjkgd3@example.com",
+                emailAdress: "mike34akklsjkgd3@example.com",
                 password: "Testtest123",
                 phoneNumber: "0612345678"
             })
@@ -159,11 +159,11 @@ describe('UC-202', () => {
     it("g5 - Send all user information using parameters", (done) => {
         chai
             .request(server)
-            .get("/api/user?firstName=Mike&emailAddress=m.leijten37@student.avans.nl")
+            .get("/api/user?firstName=Mike&emailAdress=m.leijten37@student.avans.nl")
             .end((err, res) => {
                 res.status.should.equals(200);
                 res.body.data[0].firstName.should.equals("Mike");
-                res.body.data[0].emailAddress.should.equals("m.leijten37@student.avans.nl");
+                res.body.data[0].emailAdress.should.equals("m.leijten37@student.avans.nl");
                 done();
             })
     })
@@ -174,7 +174,7 @@ describe('UC-203', () => {
         chai
             .request(server)
             .get("/api/user/profile")
-            .send({emailAddress: "m.leijten37@student.avans.nl", password: "Testtes123"})
+            .send({emailAdress: "m.leijten37@student.avans.nl", password: "Testtes123"})
             .end((err, res) => {
                 res.status.should.equals(200);
                 done();
@@ -225,7 +225,7 @@ describe('UC-205', () => {
             .send({password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.should.equal("emailAddress is required");
+                res.body.errMessage.should.equal("emailAdress is required");
                 done();
             })
     })
@@ -234,7 +234,7 @@ describe('UC-205', () => {
         chai
             .request(server)
             .put("/api/user/233")
-            .send({emailAddress: "mike34akklsjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+            .send({emailAdress: "mike34akklsjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(403);
                 res.body.errMessage.should.equal("You need to be the owner.");
@@ -246,7 +246,7 @@ describe('UC-205', () => {
         chai
             .request(server)
             .put("/api/user/237")
-            .send({emailAddress: "mike34akklsjkgd3@example.com", password: "Testtest123", phoneNumber: "06765436887"})
+            .send({emailAdress: "mike34akklsjkgd3@example.com", password: "Testtest123", phoneNumber: "06765436887"})
             .end((err, res) => {
                 res.status.should.equals(400);
                 res.body.errMessage.should.equal("Wrong phonenumber");
@@ -258,7 +258,7 @@ describe('UC-205', () => {
         chai
             .request(server)
             .put("/api/user/2386")
-            .send({emailAddress: "mike34akklasdsjkgd3@example.com", password: "Testtest123", street: "aStreet"})
+            .send({emailAdress: "mike34akklasdsjkgd3@example.com", password: "Testtest123", street: "aStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
                 res.body.errMessage.should.equal("User does not exist");
@@ -277,8 +277,8 @@ describe('UC-205', () => {
         chai
             .request(server)
             .put("/api/user/237")
-            // Other than emailAddress and password, you can add data that you would like to change
-            .send({emailAddress: "mike34akklsjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+            // Other than emailAdress and password, you can add data that you would like to change
+            .send({emailAdress: "mike34akklsjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(200);
                 done();
@@ -291,7 +291,7 @@ describe('UC-206', () => {
         chai
             .request(server)
             .delete("/api/user/2399")
-            .send({emailAddress: "mike34akklssdfjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+            .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
                 res.body.errMessage.should.equal("User does not exist");
@@ -310,7 +310,7 @@ describe('UC-206', () => {
         chai
         .request(server)
         .delete("/api/user/2399")
-        .send({emailAddress: "m.leijten37@student.avans.nl", password: "Testtest123", street: "aNewStreet"})
+        .send({emailAdress: "m.leijten37@student.avans.nl", password: "Testtest123", street: "aNewStreet"})
         .end((err, res) => {
             res.status.should.equals(403);
             res.body.errMessage.should.equal("You need to be the owner.");
@@ -322,7 +322,7 @@ describe('UC-206', () => {
         chai
         .request(server)
         .delete("/api/user/233")
-        .send({emailAddress: "mike34asjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+        .send({emailAdress: "mike34asjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
         .end((err, res) => {
             res.status.should.equals(200);
             done();

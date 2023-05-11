@@ -17,7 +17,7 @@ const userController = {
             let userEntries = Object.entries(user);
             let userValuesWithoutNull = userEntries.filter(value => value[1] != undefined);
             userValuesWithoutNull = Object.fromEntries(userValuesWithoutNull);
-            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAddress`, `passwordHash`, `passwordSalt`, `phoneNumber`];
+            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAdress`, `passwordHash`, `passwordSalt`, `phoneNumber`];
             let columnsWithValues = {};
             let everyColumnPresent = columns.flat().every((element) => {
                 let count = Object.keys(userValuesWithoutNull).filter(i => i == element).length;
@@ -66,7 +66,7 @@ const userController = {
     getUserList: (req, res, next) => {
         try {
             let parameters = Object.entries(req.query);
-            let columns = ["firstName", "lastName", "street", "city", "emailAddress", "password", "phoneNumber", "isActive"];
+            let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber", "isActive"];
             let correctParameters = [];
             parameters.forEach(([key, value], index) => {
                 if (columns.indexOf(key) == -1 && correctParameters.length == index) {
@@ -191,8 +191,8 @@ const userController = {
             switch (key) {
                 case "id":
                     break;
-                case "emailAddress":
-                    loggedInUser.setEmailAddress(value);
+                case "emailAdress":
+                    loggedInUser.setemailAdress(value);
                     break;
                 case "phoneNumber":
                     loggedInUser.setPhoneNumber(value);
@@ -205,7 +205,7 @@ const userController = {
             if (err) { next(err) }
             if (conn) {
                 let query = 'UPDATE `user` SET ';
-                let columns = ["firstName", "lastName", "street", "city", "emailAddress", "passwordHash", "passwordSalt", "phoneNumber"];
+                let columns = ["firstName", "lastName", "street", "city", "emailAdress", "passwordHash", "passwordSalt", "phoneNumber"];
                 columns.forEach((columnName) => {
                     query += columnName + " = '" + loggedInUser[columnName] + "',\r\n";
                 })

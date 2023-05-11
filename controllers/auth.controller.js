@@ -1,12 +1,12 @@
 module.exports = {
     login(req, res, next) {
-        let emailAddress = req.body.emailAddress;
+        let emailAdress = req.body.emailAdress;
         let password = req.body.password;
         const User = require('../objects/User');
-        // Used to check emailAddress and password validity
-        new User({emailAddress: emailAddress, password: password});
-        if (emailAddress == null){
-            let error = new Error("emailAddress is required");
+        // Used to check emailAdress and password validity
+        new User({emailAdress: emailAdress, password: password});
+        if (emailAdress == null){
+            let error = new Error("emailAdress is required");
             error.status = 400
             next(error);
         }
@@ -16,10 +16,10 @@ module.exports = {
                 return null;
             }
             if (conn) {
-                let query = "SELECT * FROM `user` WHERE emailAddress = ?";
+                let query = "SELECT * FROM `user` WHERE emailAdress = ?";
                 conn.query(
                     query,
-                    [emailAddress],
+                    [emailAdress],
                     function (queryError, results, fields) {
                         if (queryError) return null;
                         if (results.length == 0){

@@ -2,7 +2,7 @@ class User {
     // id;
     // isActive;
 
-    constructor({ id, firstName, lastName, street, city, isActive, emailAddress, password, passwordHash, passwordSalt, phoneNumber }) {
+    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber }) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -15,26 +15,26 @@ class User {
             this.passwordHash = passwordHash;
             this.passwordSalt = passwordSalt;
         }
-        if (emailAddress) this.setEmailAddress(emailAddress);
+        if (emailAdress) this.setemailAdress(emailAdress);
         if (phoneNumber) this.setPhoneNumber(phoneNumber);
     }
 
-    setEmailAddress(emailAddress) {
-        if (this.checkEmailAddress(emailAddress) == true) { 
-            this.emailAddress =  emailAddress;
+    setemailAdress(emailAdress) {
+        if (this.checkemailAdress(emailAdress) == true) { 
+            this.emailAdress =  emailAdress;
         }
     }
 
-    checkEmailAddress(emailAddress) {
-        let match = String(emailAddress)
+    checkemailAdress(emailAdress) {
+        let match = String(emailAdress)
         .toLowerCase()
         .match(
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
-        // The database checks if the emailAddress already exists
-        // if (match == null) { throw new Error("Wrong email address: " + emailAddress); }
+        // The database checks if the emailAdress already exists
+        // if (match == null) { throw new Error("Wrong email address: " + emailAdress); }
         if (match == null) { 
-            let error = new Error("Wrong email address: " + emailAddress);
+            let error = new Error("Wrong email address: " + emailAdress);
             error.status = 400
             throw error;
         }
