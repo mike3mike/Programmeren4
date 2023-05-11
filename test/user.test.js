@@ -362,6 +362,18 @@ describe('UC-205', () => {
 })
 
 describe('UC-206', () => {
+    beforeEach(() => {
+        pool.getConnection(function (connectionError, conn) {
+            if (conn) {
+                conn.query(
+                    deleteQueries + insertQueries
+                );
+                pool.releaseConnection(conn);
+            }
+        });
+        return;
+    })
+
     it("c1 - User does not exist", (done) => {
         chai
             .request(server)
