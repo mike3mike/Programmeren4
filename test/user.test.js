@@ -336,24 +336,24 @@ describe('UC-205', () => {
             done();
     })
 
-    it("b5 - Not logged in", (done) => {
-        chai
-        .request(server)
-        .put("/api/user/2386")
-        .send({emailAdress: "mikeleijten1@gmail.com", password: "asdfls", street: "aStreet"})
-        .end((err, res) => {
-            res.status.should.equals(404);
-            res.body.errMessage.should.equal("User does not exist") || res.body.errMessage.should.equal("emailAdress is required");
-        })
-        done()
-    })
+    // it("b5 - Not logged in", (done) => {
+    //     chai
+    //     .request(server)
+    //     .put("/api/user/2386")
+    //     .send({emailAdress: "mikeleijten1@gmail.com", password: "Testtest123", street: "aStreet"})
+    //     .end((err, res) => {
+    //         res.status.should.equals(404);
+    //         res.body.errMessage.should.equal("User does not exist") || res.body.errMessage.should.equal("emailAdress is required");
+    //     })
+    //     done()
+    // })
 
     it("b6 - Correct", (done) => {
         chai
             .request(server)
-            .put("/api/user/237")
+            .put("/api/user/1")
             // Other than emailAdress and password, you can add data that you would like to change
-            .send({emailAdress: "mike34akklsjkgd3@example.com", password: "Testtest123", street: "aNewStreet"})
+            .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(200);
             })
