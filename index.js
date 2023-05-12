@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-// app.use(bodyParser.raw({ inflate: true, limit: '100kb', type: 'application/json' }));
 app.use(express.json());
 const port = 3000;
 
@@ -41,7 +40,7 @@ app.use((req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Application is running.`)
+    console.log(`Application is running on ` + port + '.')
 })
 
 module.exports = app;
