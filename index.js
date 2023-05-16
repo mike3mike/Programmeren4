@@ -12,6 +12,7 @@ app.use((err, req, res, next) => {
     // } else {
     //     console.log(err);
     // }
+    console.log(req.originalUrl);
     if (!res.headersSent) {
         if (err.status) {
             res.status(err.status).json(
