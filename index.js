@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
                 {
                     status: err.status,
                     errCode: err.code,
-                    errMessage: err.message
+                    message: err.message
                 }
             );
         } else if (err.code || err.message) {
@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
                 {
                     status: 500,
                     errCode: err.code,
-                    errMessage: err.message
+                    message: err.message
                 }
             );
         } else {

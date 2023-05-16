@@ -46,6 +46,7 @@ const userController = {
                                     user.id = results.insertId;
                                     res.status(201).json({
                                         status: 201,
+                                        message: "Register user",
                                         data: user
                                     });
                                 }
@@ -75,6 +76,7 @@ const userController = {
                 if (columns.indexOf(key) == -1 && correctParameters.length == index) {
                     res.status(200).json({
                         status: 200,
+                        message: "Parameter not allowed",
                         data: []
                     });
                     return false;
@@ -101,13 +103,12 @@ const userController = {
                             'SELECT * FROM `user`' + whereQuery,
                             function (queryError, results, fields) {
                                 if (queryError) {
-                                    res.status(403).json({
-                                        "Error": queryError.code
-                                    });
+                                    queryError.code = 403;
                                     next(queryError);
                                 } else {
                                     res.status(200).json({
                                         status: 200,
+                                        message: "User list",
                                         data: results
                                     });
                                 }
@@ -147,7 +148,8 @@ const userController = {
                             } else {
                                 res.status(200).json({
                                     status: 200,
-                                    results
+                                    message: "Profile by id",
+                                    data: results
                             });
                             }
                         }
@@ -176,7 +178,8 @@ const userController = {
                             loggedInUser.meals = results;
                             res.status(200).json({
                                 status: 200,
-                                loggedInUser
+                                message: "Own Profile",
+                                data: loggedInUser
                             });
                         }
                     }
@@ -237,7 +240,8 @@ const userController = {
                         } else {
                             res.status(200).json({
                                 status: 200,
-                                results
+                                message: "Update User",
+                                data: results
                             });
                         }
                     }
@@ -267,7 +271,8 @@ const userController = {
                             res.status(200).json(
                             {
                                 status: 200,
-                                message: "User met ID " + id + " is verwijderd"
+                                message: "User met ID " + id + " is verwijderd",
+                                data: []
                             }
                         )};
                     }
