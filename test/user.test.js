@@ -41,7 +41,7 @@ describe('UC-201', () => {
             })
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.should.equals("Not every required attribute is present");
+                res.body.message.should.equals("Not every required attribute is present");
             })
             done();
     })
@@ -61,7 +61,7 @@ describe('UC-201', () => {
             })
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.should.equals("Wrong email address: @mike@gmail.com");
+                res.body.message.should.equals("Wrong email address: @mike@gmail.com");
             })
             done();
 
@@ -82,7 +82,7 @@ describe('UC-201', () => {
             })
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.substring(0, 14).should.equals("Wrong password");
+                res.body.message.substring(0, 14).should.equals("Wrong password");
             })
             done();
     })
@@ -102,7 +102,7 @@ describe('UC-201', () => {
             })
             .end((err, res) => {
                 res.status.should.equals(403);
-                res.body.errMessage.substring(0,15).should.equals("Duplicate entry");
+                res.body.message.substring(0,15).should.equals("Duplicate entry");
             })
             done();
     })
@@ -256,7 +256,7 @@ describe('UC-204', () => {
             .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
-                res.body.errMessage.should.equals("User not found");
+                res.body.message.should.equals("User not found");
                 // res.body.errMessage.should.equals("User does not exist");
             })
             done();
@@ -295,7 +295,7 @@ describe('UC-205', () => {
             .send({password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.should.equal("emailAdress is required");
+                res.body.message.should.equal("emailAdress is required");
             })
             done();
     })
@@ -307,7 +307,7 @@ describe('UC-205', () => {
             .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(403);
-                res.body.errMessage.should.equal("You need to be the owner.");
+                res.body.message.should.equal("You need to be the owner.");
             })
             done();
     })
@@ -319,7 +319,7 @@ describe('UC-205', () => {
             .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", phoneNumber: "06765436887"})
             .end((err, res) => {
                 res.status.should.equals(400);
-                res.body.errMessage.should.equal("Wrong phonenumber");
+                res.body.message.should.equal("Wrong phonenumber");
             })
             done();
     })
@@ -331,7 +331,7 @@ describe('UC-205', () => {
             .send({emailAdress: "mike34akklasdsjkgd3@example.com", password: "Testtest123", street: "aStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
-                res.body.errMessage.should.equal("User does not exist");
+                res.body.message.should.equal("User does not exist");
             })
             done();
     })
@@ -381,7 +381,7 @@ describe('UC-206', () => {
             .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
-                res.body.errMessage.should.equal("User does not exist");
+                res.body.message.should.equal("User does not exist");
             })
             done();
     })
@@ -400,7 +400,7 @@ describe('UC-206', () => {
         .send({emailAdress: "m.leijten37@student.avans.nl", password: "Testtest123", street: "aNewStreet"})
         .end((err, res) => {
             res.status.should.equals(403);
-            res.body.errMessage.should.equal("You need to be the owner.");
+            res.body.message.should.equal("You need to be the owner.");
         })
         done();
     })
