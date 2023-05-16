@@ -156,7 +156,7 @@ describe('UC-202', () => {
             .get("/api/user?nonExisting=Mike&nonExisting2=Leijten")
             .end((err, res) => {
                 res.status.should.equals(200);
-                res.body.data.should.deep.equal([]);
+                res.body.data.should.deep.equal({});
             })
             done();
     })
