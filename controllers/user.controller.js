@@ -45,6 +45,7 @@ const userController = {
                                 } else {
                                     user.id = results.insertId;
                                     res.status(201).json({
+                                        status: 201,
                                         data: user
                                     });
                                 }
@@ -70,11 +71,13 @@ const userController = {
             let parameters = Object.entries(req.query);
             let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber", "isActive"];
             let correctParameters = [];
-            parameters.forEach(([key, value], index) => {
+            parameters.every(([key, value], index) => {
                 if (columns.indexOf(key) == -1 && correctParameters.length == index) {
                     res.status(200).json({
+                        status: 200,
                         data: []
                     });
+                    return false;
                 } else {
                     correctParameters.push([key, value]);
                 }
@@ -104,6 +107,7 @@ const userController = {
                                     next(queryError);
                                 } else {
                                     res.status(200).json({
+                                        status: 200,
                                         data: results
                                     });
                                 }
@@ -141,7 +145,10 @@ const userController = {
                                     message: "User not found"
                                 });
                             } else {
-                                res.status(200).json(results);
+                                res.status(200).json({
+                                    status: 200,
+                                    results
+                            });
                             }
                         }
                     }
@@ -167,7 +174,10 @@ const userController = {
                             });
                         } else {
                             loggedInUser.meals = results;
-                            res.status(200).json(loggedInUser);
+                            res.status(200).json({
+                                status: 200,
+                                loggedInUser
+                            });
                         }
                     }
                     }
@@ -225,7 +235,10 @@ const userController = {
                         if (err) {
                             next(err);
                         } else {
-                            res.status(200).json(results);
+                            res.status(200).json({
+                                status: 200,
+                                results
+                            });
                         }
                     }
                 );
@@ -253,6 +266,7 @@ const userController = {
                         if (err) { next(err); } else {
                             res.status(200).json(
                             {
+                                status: 200,
                                 message: "User met ID " + id + " is verwijderd"
                             }
                         )};
