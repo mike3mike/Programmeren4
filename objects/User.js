@@ -91,7 +91,7 @@ class User {
     comparePassword(passwordAttempt) {
         if (passwordAttempt == this.password) {
             require('dotenv').config();
-            let secret = process.env.JWT_SECRET;
+            let secret = process.env.JWT_SECRET || "ajwtsecret";
             var jwt = require('jsonwebtoken');
             var token = jwt.sign({ userId: this.id }, secret);
             return token;
