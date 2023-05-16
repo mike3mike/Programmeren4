@@ -6,6 +6,10 @@ const port = process.env.PORT || 3000;
 const userRouter = require('./routes/user.routes');
 app.use("/api", userRouter);
 
+app.all((req, res, next) => {
+    console.log(req.body);
+})
+
 app.use((err, req, res, next) => {
     // if (err.code != undefined) {
     //     console.log("Error code: " + err.code);
@@ -16,6 +20,7 @@ app.use((err, req, res, next) => {
         if (err.status) {
             res.status(err.status).json(
                 {
+                    status: err.status,
                     errCode: err.code,
                     errMessage: err.message
                 }
@@ -23,12 +28,15 @@ app.use((err, req, res, next) => {
         } else if (err.code || err.message) {
             res.status(500).json(
                 {
+                    status: 500,
                     errCode: err.code,
                     errMessage: err.message
                 }
             );
         } else {
-            res.status(500).send();
+            res.status(500).json({
+                status: 500
+            });
         }
     }
 })
