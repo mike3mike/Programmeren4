@@ -77,7 +77,7 @@ const userController = {
                     res.status(200).json({
                         status: 200,
                         message: "Parameter not allowed",
-                        data: []
+                        data: {}
                     });
                     return false;
                 } else {
@@ -272,7 +272,7 @@ const userController = {
                             {
                                 status: 200,
                                 message: "User met ID " + id + " is verwijderd",
-                                data: []
+                                data: {}
                             }
                         )};
                     }
