@@ -12,7 +12,6 @@ app.use((err, req, res, next) => {
     // } else {
     //     console.log(err);
     // }
-    console.log(req.originalUrl);
     if (!res.headersSent) {
         if (err.status) {
             res.status(err.status).json(
@@ -43,6 +42,7 @@ app.use((err, req, res, next) => {
 })
 
 app.use((req, res) => {
+    console.log(req.originalUrl);
     console.log("Status Code: 404");
     res.status(404).end();
 })
