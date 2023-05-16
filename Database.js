@@ -6,7 +6,7 @@ const pool = conn.createPool({
     user: process.env.DB_USER || 'root',
     database: process.env.DB_DATABASE || 'share_a_meal',
     password: process.env.DB_PASSWORD || 'root',
-    port: process.env.port || '3306',
+    port: process.env.DB_PORT || '3306',
     waitForConnections: true,
     multipleStatements: true,
     connectionLimit: 10,
