@@ -17,7 +17,7 @@ const userController = {
             let userEntries = Object.entries(user);
             let userValuesWithoutNull = userEntries.filter(value => value[1] != undefined);
             userValuesWithoutNull = Object.fromEntries(userValuesWithoutNull);
-            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAdress`, `password`, `phoneNumber`];
+            let columns = [`firstName`, `lastName`, `street`, `city`, `emailAdress`, `password`, `phoneNumber`, `roles`];
             let columnsWithValues = {};
             let everyColumnPresent = columns.every((element) => {
                 let count = Object.keys(userValuesWithoutNull).filter(i => i == element).length;

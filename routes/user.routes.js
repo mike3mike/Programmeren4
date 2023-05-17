@@ -14,15 +14,15 @@ userRouter.post('', userController.registerUser)
 userRouter.get('', userController.getUserList)
 
 // UC-203
-userRouter.get("/profile", authController.login, userController.getProfile)
+userRouter.get("/profile", userController.getProfile)
 
 // UC-204
 // userRouter.get("/:userId", authController.validate, userController.getProfileById)
-userRouter.get("/:userId", authController.login, userController.getProfileById)
+userRouter.get("/:userId", userController.getProfileById)
 // UC-205
-userRouter.put("/:userId", authController.login, userController.updateUser)
+userRouter.put("/:userId", userController.updateUser)
 // UC-206
-userRouter.delete("/:userId", authController.login, userController.deleteUser)
+userRouter.delete("/:userId", userController.deleteUser)
 
 
 module.exports = userRouter;
