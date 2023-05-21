@@ -3,7 +3,10 @@ const authController = require('../controllers/auth.controller');
 const userController = require('../controllers/user.controller');
 const router = express.Router();
 
+// UC-101
 router.post('/login', authController.login, userController.login)
+// UC-102
+router.post('/info', authController.login, userController.info)
 
 const userRouter = express.Router();
 router.use('/user', userRouter);

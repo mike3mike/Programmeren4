@@ -10,6 +10,18 @@ const userController = {
         res.send("Welcome " + req.user.firstName + "\r\nToken: " + req.user.jwtToken);
     },
 
+    info: (req, res, next) => {
+        res.json({
+            "status": 200,
+            "message": "Info endpoint",
+            "data": {
+                "studentName": req.user.firstName + " " + req.user.lastName,
+                "studentNumber": req.user.id,
+                "description": "Welkom bij de share-a-meal API."
+            }
+        });
+    },
+
     registerUser: (req, res, next) => {
         let reqBody = req.body;
         try {
