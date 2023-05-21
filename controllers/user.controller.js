@@ -15,8 +15,8 @@ const userController = {
             "status": 200,
             "message": "Info endpoint",
             "data": {
-                "studentName": req.user.firstName + " " + req.user.lastName,
-                "studentNumber": req.user.id,
+                "studentName": "Mike Leijten",
+                "studentNumber": 2207644,
                 "description": "Welkom bij de share-a-meal API."
             }
         });
