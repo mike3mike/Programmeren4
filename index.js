@@ -13,6 +13,7 @@ app.use((err, req, res, next) => {
     //     console.log(err);
     // }
     // console.log(err);
+    console.log("Input Body: " + JSON.stringify(req.body));
     if (!res.headersSent) {
         if (err.status) {
             res.status(err.status).json(
