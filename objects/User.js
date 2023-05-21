@@ -2,13 +2,14 @@ class User {
     // id;
     // isActive;
 
-    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber, jwtToken }) {
+    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber, jwtToken, roles }) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.street = street;
         this.city = city;
         this.isActive = isActive;
+        this.roles = roles;
         if (password) { 
             this.setPassword(password); 
         } 

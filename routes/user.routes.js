@@ -17,12 +17,12 @@ userRouter.get('', userController.getUserList)
 userRouter.get("/profile", userController.getProfile)
 
 // UC-204
-// userRouter.get("/:userId", authController.validate, userController.getProfileById)
-userRouter.get("/:userId", userController.getProfileById)
+userRouter.get("/:userId", authController.validate, userController.getProfileById)
+// userRouter.get("/:userId", userController.getProfileById)
 // UC-205
-userRouter.put("/:userId", userController.updateUser)
+userRouter.put("/:userId", authController.login, userController.updateUser)
 // UC-206
-userRouter.delete("/:userId", userController.deleteUser)
+userRouter.delete("/:userId", authController.login, userController.deleteUser)
 
 
 module.exports = userRouter;

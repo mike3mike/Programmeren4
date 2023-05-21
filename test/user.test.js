@@ -98,7 +98,8 @@ describe('UC-201', () => {
                 city: "Tilburg",
                 emailAdress: "mikeleijten1@gmail.com",
                 password: "newPassword",
-                phoneNumber: "0615601357"
+                phoneNumber: "0615601357",
+                roles: "admin"
             })
             .end((err, res) => {
                 res.status.should.equals(403);
@@ -118,7 +119,8 @@ describe('UC-201', () => {
                 city: "Breda",
                 emailAdress: "mike34akklsjkgd3@example.com",
                 password: "Testtest123",
-                phoneNumber: "0612345678"
+                phoneNumber: "0612345678",
+                roles: "admin"
             })
             .end((err, res) => {
                 res.status.should.equals(201);
@@ -252,7 +254,7 @@ describe('UC-204', () => {
         chai
             .request(server)
             .get("/api/user/343254")
-            // .set('Authorization', "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIifQ.EI3fpdrc6wySmEOMf8XZVX5K5SFVKkjsdU4hTbL_bv4")
+            .set('Authorization', "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIifQ.EI3fpdrc6wySmEOMf8XZVX5K5SFVKkjsdU4hTbL_bv4")
             .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(404);
@@ -266,7 +268,7 @@ describe('UC-204', () => {
         chai
             .request(server)
             .get("/api/user/1")
-            // .set('Authorization', "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIifQ.EI3fpdrc6wySmEOMf8XZVX5K5SFVKkjsdU4hTbL_bv4")
+            .set('Authorization', "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIifQ.EI3fpdrc6wySmEOMf8XZVX5K5SFVKkjsdU4hTbL_bv4")
             .send({emailAdress: "mikeleijten1@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
                 res.status.should.equals(200);

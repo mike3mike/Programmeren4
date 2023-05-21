@@ -70,16 +70,15 @@ const userController = {
     getUserList: (req, res, next) => {
         try {
             let parameters = Object.entries(req.query);
-            let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber", "isActive"];
+            let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber", "isActive", "roles"];
             let correctParameters = [];
-            parameters.every(([key, value], index) => {
+            parameters.forEach(([key, value], index) => {
                 if (columns.indexOf(key) == -1 && correctParameters.length == index) {
                     res.status(200).json({
                         status: 200,
                         message: "Parameter not allowed",
                         data: {}
                     });
-                    return false;
                 } else {
                     correctParameters.push([key, value]);
                 }

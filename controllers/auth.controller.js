@@ -47,8 +47,9 @@ module.exports = {
             jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
             console.log("Validated id: " + jwt.id);
             if (jwt.id) {
-                let user = new User();
-                user.id = jwt.id;
+                const User = require('../objects/User');
+                let user = new User({id: jwt.id});
+                // user.id = jwt.id;
                 req.user = user;
                 next()
             } else {
