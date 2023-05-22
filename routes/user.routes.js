@@ -23,7 +23,7 @@ userRouter.get("/profile", authController.validate, userController.getProfile)
 userRouter.get("/:userId", authController.validate, userController.getProfileById)
 // userRouter.get("/:userId", userController.getProfileById)
 // UC-205
-userRouter.put("/:userId", authController.validate, userController.updateUser)
+userRouter.put("/:userId", authController.login, authController.validate, userController.updateUser)
 // UC-206
 userRouter.delete("/:userId", authController.validate, userController.deleteUser)
 
