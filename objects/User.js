@@ -52,6 +52,7 @@ class User {
     }
     
     checkPhoneNumber(phoneNumber) {
+        phoneNumber = phoneNumber.replace(' ', '').replace('-', '');
         let match = String(phoneNumber)
         .toLowerCase()
         .match(
@@ -75,9 +76,7 @@ class User {
     }
 
     checkPassword(password) {
-        password = password.replace(' ', '').replace('-', '');
         let match = String(password)
-        .toLowerCase()
         .match(
             /^(?=.*\d)(?=.*[A-Z]).{8,}$/
         );
