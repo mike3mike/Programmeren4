@@ -53,11 +53,10 @@ module.exports = {
                     req.user = user;
                     next()
                 } else {
-                    res.send(JSON.stringify(res.body));
-                    // next({
-                    //     status: 401,
-                    //     message: "Something is wrong with your JWT token."
-                    // });
+                    next({
+                        status: 401,
+                        message: "Something is wrong with your JWT token."
+                    });
                 };
             } else {
                 next({
