@@ -56,7 +56,7 @@ class User {
         let match = String(phoneNumber)
         .toLowerCase()
         .match(
-            /^[0-9]{10}$/
+            /^06[0-9]{8}$/
         );
         if (match == null) { 
             let error = new Error("Wrong phonenumber");

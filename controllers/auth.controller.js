@@ -19,7 +19,7 @@ module.exports = {
                 let query = "SELECT * FROM `user` WHERE emailAdress = ?";
                 let values = [emailAdress];
                 if (req.params.userId != undefined) {
-                    query += " AND id = ?";
+                    query += " OR id = ?";
                     values.push(req.params.userId);
                 }
                 conn.query(
