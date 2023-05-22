@@ -118,7 +118,7 @@ class User {
     setJWTtoken(passwordAttempt) {
         let jwtToken = this.comparePassword(passwordAttempt);
         if (jwtToken) {
-            this.jwtToken = jwtToken;
+            this.token = jwtToken;
         }
     }
 }
