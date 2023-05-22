@@ -68,7 +68,7 @@ const userController = {
                     }
                 });
             } else {
-                let error = new Error("Not every required attribute is present" + JSON.stringify(req.body));
+                let error = new Error("Not every required attribute is present" + JSON.stringify(req.body) + "---" + JSON.stringify(Object.keys(userValuesWithoutNull)));
                 error.status = 400;
                 next(error);
             }
