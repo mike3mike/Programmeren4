@@ -50,11 +50,10 @@ module.exports = {
                 if (jwt.id) {
                     const User = require('../objects/User');
                     let user = new User({id: jwt.id});
-                    // user.id = jwt.id;
                     req.user = user;
                     next()
                 } else {
-                    next("Something is wrong with your JWT token.");
+                    next({ message: "Something is wrong with your JWT token." });
                 };
             } else {
                 next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {token}'." });
