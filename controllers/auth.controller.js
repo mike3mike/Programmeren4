@@ -53,7 +53,7 @@ module.exports = {
                 }
                 if (jwt.id) {
                     const User = require('../objects/User');
-                    let user = new User({ id: jwt.id });
+                    let user = new User({ id: jwt.userId });
                     req.user = user;
                     next()
                 } else {
