@@ -17,7 +17,7 @@ userRouter.post('', userController.registerUser)
 userRouter.get('', userController.getUserList)
 
 // UC-203
-userRouter.get("/profile", authController.login, userController.getProfile)
+userRouter.get("/profile", authController.validate, userController.getProfile)
 
 // UC-204
 userRouter.get("/:userId", authController.validate, userController.getProfileById)

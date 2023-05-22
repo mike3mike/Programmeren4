@@ -11,10 +11,7 @@ const userController = {
         res.status(200).json({
             status: 200,
             message: "Login Succesful",
-            data: {
-                User: req.user,
-                token: req.user.jwtToken
-            }
+            data: req.user
         });
     },
 

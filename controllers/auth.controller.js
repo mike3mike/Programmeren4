@@ -41,7 +41,10 @@ module.exports = {
 
     validate(req, res, next) {
         let authHeader = req.headers.authorization;
-        res.send(req.headers.authorization);
+        res.json({
+            authHeader: req.headers.authorization,
+            body: req.body
+        });
         // if (authHeader.startsWith("Bearer ")) {
         //     let reqJWTtoken = authHeader.substring(7, authHeader.length);
         //     var jwt = require('jsonwebtoken');
