@@ -9,7 +9,7 @@ const userController = {
     login: (req, res, next) => {
         // res.send("Welcome " + req.user.firstName + "\r\nToken: " + req.user.jwtToken);
         res.status(200).json({
-            status: "200",
+            status: 200,
             message: "Login Succesful",
             data: {
                 User: req.user,

@@ -41,22 +41,23 @@ module.exports = {
 
     validate(req, res, next) {
         let authHeader = req.headers.authorization;
-        if (authHeader.startsWith("Bearer ")) {
-            let reqJWTtoken = authHeader.substring(7, authHeader.length);
-            var jwt = require('jsonwebtoken');
-            jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
-            console.log("Validated id: " + jwt.id);
-            if (jwt.id) {
-                const User = require('../objects/User');
-                let user = new User({id: jwt.id});
-                // user.id = jwt.id;
-                req.user = user;
-                next()
-            } else {
-                next("Something is wrong with your JWT token.");
-            };
-        } else {
-            next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {JWT token}'." });
-        }
+        res.send(req.headers.authorization);
+        // if (authHeader.startsWith("Bearer ")) {
+        //     let reqJWTtoken = authHeader.substring(7, authHeader.length);
+        //     var jwt = require('jsonwebtoken');
+        //     jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
+        //     console.log("Validated id: " + jwt.id);
+        //     if (jwt.id) {
+        //         const User = require('../objects/User');
+        //         let user = new User({id: jwt.id});
+        //         // user.id = jwt.id;
+        //         req.user = user;
+        //         next()
+        //     } else {
+        //         next("Something is wrong with your JWT token.");
+        //     };
+        // } else {
+        //     next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {JWT token}'." });
+        // }
     }
 };
