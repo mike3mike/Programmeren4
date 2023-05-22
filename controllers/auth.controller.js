@@ -1,6 +1,6 @@
 module.exports = {
     login(req, res, next) {
-        res.send(JSON.stringify(req.body) + JSON.stringify({id: req.params.userId}));
+        res.JSON({reqBody: req.body, userId: req.params.userId});
         // let emailAdress = req.body.emailAdress;
         // let password = req.body.password;
         // const User = require('../objects/User');
