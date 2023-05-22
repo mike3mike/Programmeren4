@@ -49,17 +49,26 @@ module.exports = {
                 console.log("Validated id: " + jwt.id);
                 if (jwt.id) {
                     const User = require('../objects/User');
-                    let user = new User({id: jwt.id});
+                    let user = new User({ id: jwt.id });
                     req.user = user;
                     next()
                 } else {
-                    next({ message: "Something is wrong with your JWT token." });
+                    next({
+                        status: 401,
+                        message: "Something is wrong with your JWT token."
+                    });
                 };
             } else {
-                next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {token}'." });
+                next({
+                    status: 401,
+                    message: "Include a bearer token in the authorization header. The format is 'Bearer {token}'."
+                });
             }
         } catch (e) {
-            next({ message: "Include a bearer token in the authorization header. The format is 'Bearer {token}'." });
+            next({
+                status: 401,
+                message: "Include a bearer token in the authorization header. The format is 'Bearer {token}'."
+            });
         }
     }
 };
