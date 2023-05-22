@@ -203,64 +203,65 @@ const userController = {
     },
 
     updateUser: (req, res, next) => {
-        let reqBody = req.body;
-        let loggedInUser = req.user;
-        if (loggedInUser.id != req.params.userId) {
-            let error = Error("You need to be the owner.");
-            error.status = 403;
-            throw error;
-        }
-        // User doens't have postcode, so that validity cannot be checked
-        Object.entries(reqBody).forEach(([key, value]) => {
-            switch (key) {
-                case "id":
-                    break;
-                case "emailAdress":
-                    loggedInUser.setEmailAdress(value);
-                    break;
-                case "phoneNumber":
-                    loggedInUser.setPhoneNumber(value);
-                    break
-                default:
-                    loggedInUser[key] = value;
-            }
-        });
-        pool.getConnection(function (err, conn) {
-            if (err) { next(err) }
-            if (conn) {
-                let query = 'UPDATE `user` SET ';
-                let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber"];
-                columns.forEach((columnName) => {
-                    query += columnName + " = '" + loggedInUser[columnName] + "',\r\n";
-                })
-                query = query.substring(0, query.length - 3);
-                query += "\r\nWHERE id = " + loggedInUser.id;
-                conn.query(
-                    query,
-                    function (err, results) {
-                        if (err) {
-                            next(err);
-                        }
-                    }
-                );
-                conn.query(
-                    "SELECT * FROM `user` WHERE id = ?",
-                    [loggedInUser.id],
-                    function (err, results) {
-                        if (err) {
-                            next(err);
-                        } else {
-                            res.status(200).json({
-                                status: 200,
-                                message: "Update User",
-                                data: results
-                            });
-                        }
-                    }
-                );
-                pool.releaseConnection(conn);
-            }
-        });
+        res.send(req.body);
+        // let reqBody = req.body;
+        // let loggedInUser = req.user;
+        // if (loggedInUser.id != req.params.userId) {
+        //     let error = Error("You need to be the owner.");
+        //     error.status = 403;
+        //     throw error;
+        // }
+        // // User doens't have postcode, so that validity cannot be checked
+        // Object.entries(reqBody).forEach(([key, value]) => {
+        //     switch (key) {
+        //         case "id":
+        //             break;
+        //         case "emailAdress":
+        //             loggedInUser.setEmailAdress(value);
+        //             break;
+        //         case "phoneNumber":
+        //             loggedInUser.setPhoneNumber(value);
+        //             break
+        //         default:
+        //             loggedInUser[key] = value;
+        //     }
+        // });
+        // pool.getConnection(function (err, conn) {
+        //     if (err) { next(err) }
+        //     if (conn) {
+        //         let query = 'UPDATE `user` SET ';
+        //         let columns = ["firstName", "lastName", "street", "city", "emailAdress", "password", "phoneNumber"];
+        //         columns.forEach((columnName) => {
+        //             query += columnName + " = '" + loggedInUser[columnName] + "',\r\n";
+        //         })
+        //         query = query.substring(0, query.length - 3);
+        //         query += "\r\nWHERE id = " + loggedInUser.id;
+        //         conn.query(
+        //             query,
+        //             function (err, results) {
+        //                 if (err) {
+        //                     next(err);
+        //                 }
+        //             }
+        //         );
+        //         conn.query(
+        //             "SELECT * FROM `user` WHERE id = ?",
+        //             [loggedInUser.id],
+        //             function (err, results) {
+        //                 if (err) {
+        //                     next(err);
+        //                 } else {
+        //                     res.status(200).json({
+        //                         status: 200,
+        //                         message: "Update User",
+        //                         data: results
+        //                     });
+        //                 }
+        //             }
+        //         );
+        //         pool.releaseConnection(conn);
+        //     }
+        // });
     },
 
     deleteUser: (req, res, next) => {
