@@ -79,7 +79,7 @@ class User {
         let match = String(password)
         .toLowerCase()
         .match(
-            /^[a-z,A-Z].*/
+            /^(?=.*\d)(?=.*[A-Z]).{8,}$/
         );
         if (match == null) { 
             let error = new Error("Wrong password: " + password);
