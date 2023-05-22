@@ -48,6 +48,11 @@ module.exports = {
                 jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
                 console.log("Validated id: " + jwt.id);
                 if (jwt.id) {
+                    if (jwt.id != req.params.userId) {
+                        let error = Error("You need to be the owner.");
+                        error.status = 403;
+                        next(error);
+                    }
                     const User = require('../objects/User');
                     let user = new User({ id: jwt.id });
                     req.user = user;
