@@ -7,7 +7,15 @@ function parseJwt(token) {
 
 const userController = {
     login: (req, res, next) => {
-        res.send("Welcome " + req.user.firstName + "\r\nToken: " + req.user.jwtToken);
+        // res.send("Welcome " + req.user.firstName + "\r\nToken: " + req.user.jwtToken);
+        res.status(200).json({
+            status: "200",
+            message: "Login Succesful",
+            data: {
+                User: req.user,
+                token: req.user.jwtToken
+            }
+        });
     },
 
     info: (req, res, next) => {
@@ -68,7 +76,7 @@ const userController = {
                     }
                 });
             } else {
-                let error = new Error("Not every required attribute is present" + JSON.stringify(req.body) + "---" + JSON.stringify(Object.keys(userValuesWithoutNull)));
+                let error = new Error("Not every required attribute is present");
                 error.status = 400;
                 next(error);
             }
