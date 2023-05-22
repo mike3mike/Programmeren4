@@ -46,23 +46,26 @@ module.exports = {
                 let reqJWTtoken = authHeader.substring(7, authHeader.length);
                 var jwt = require('jsonwebtoken');
                 jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
-                console.log("Validated id: " + jwt.id);
-                if (JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).id != req.params.userId) {
-                    let error = Error("You need to be the owner.");
-                    error.status = 403;
-                    next(error);
-                }
-                if (jwt.id) {
-                    const User = require('../objects/User');
-                    let user = new User({ id: jwt.id });
-                    req.user = user;
-                    next()
-                } else {
-                    next({
-                        status: 401,
-                        message: "Something is wrong with your JWT token."
-                    });
-                };
+                res.json({
+                    decoded: JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()),
+                    token: reqJWTtoken
+                });
+                // if (JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).id != req.params.userId) {
+                //     let error = Error("You need to be the owner.");
+                //     error.status = 403;
+                //     next(error);
+                // }
+                // if (jwt.id) {
+                //     const User = require('../objects/User');
+                //     let user = new User({ id: jwt.id });
+                //     req.user = user;
+                //     next()
+                // } else {
+                //     next({
+                //         status: 401,
+                //         message: "Something is wrong with your JWT token."
+                //     });
+                // };
             } else {
                 next({
                     status: 401,
