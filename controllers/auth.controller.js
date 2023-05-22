@@ -51,7 +51,7 @@ module.exports = {
                     error.status = 403;
                     next(error);
                 }
-                if (jwt.id) {
+                if (jwt.userId) {
                     const User = require('../objects/User');
                     let user = new User({ id: jwt.userId });
                     req.user = user;
