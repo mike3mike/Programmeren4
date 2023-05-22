@@ -2,7 +2,7 @@ class User {
     // id;
     // isActive;
 
-    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber, jwtToken, roles }) {
+    constructor({ id, firstName, lastName, street, city, isActive, emailAdress, password, passwordHash, passwordSalt, phoneNumber, token, roles }) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -18,7 +18,7 @@ class User {
         // }
         if (emailAdress) this.setEmailAdress(emailAdress);
         if (phoneNumber) this.setPhoneNumber(phoneNumber);
-        this.jwtToken = this.jwtToken;
+        this.token = this.token;
     }
 
     setEmailAdress(emailAdress) {

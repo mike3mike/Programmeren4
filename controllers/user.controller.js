@@ -1,10 +1,6 @@
 const pool = require('../Database');
 const User = require('../objects/User');
 
-function parseJwt(token) {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-}
-
 const userController = {
     login: (req, res, next) => {
         // res.send("Welcome " + req.user.firstName + "\r\nToken: " + req.user.jwtToken);
