@@ -31,7 +31,7 @@ class User {
         let match = String(emailAdress)
         .toLowerCase()
         .match(
-            /^[a-zA-Z]{1}.[a-zA-Z]{2,}@[a-zA-Z]{2,}.[a-zA-Z]{2,3}$/
+            /^[a-zA-Z]{1}.[a-zA-Z]{2,}@[a-zA-Z]{2,}\.[a-zA-Z]{2,3}$/
         );
         // let match = String(emailAdress)
         // .toLowerCase()
