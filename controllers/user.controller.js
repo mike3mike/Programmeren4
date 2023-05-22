@@ -68,7 +68,7 @@ const userController = {
                     }
                 });
             } else {
-                let error = new Error("Not every required attribute is present");
+                let error = new Error("Not every required attribute is present" + req.body);
                 error.status = 400;
                 next(error);
             }
