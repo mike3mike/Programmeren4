@@ -17,9 +17,14 @@ module.exports = {
             }
             if (conn) {
                 let query = "SELECT * FROM `user` WHERE emailAdress = ?";
+                let values = [emailAdress];
+                if (req.params.userId != undefined) {
+                    query += " AND id = ?";
+                    values.push(req.params.userId);
+                }
                 conn.query(
                     query,
-                    [emailAdress],
+                    values,
                     function (queryError, results, fields) {
                         if (queryError) return null;
                         if (results.length == 0) {
