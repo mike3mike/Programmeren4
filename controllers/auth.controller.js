@@ -4,7 +4,7 @@ module.exports = {
         let password = req.body.password;
         const User = require('../objects/User');
         // Used to check emailAdress and password validity
-        new User({ emailAdress: emailAdress, password: password });
+        new User(req.body);
         if (emailAdress == null) {
             let error = new Error("emailAdress is required");
             error.status = 400
