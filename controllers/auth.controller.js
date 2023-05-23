@@ -18,10 +18,10 @@ module.exports = {
             if (conn) {
                 let query = "SELECT * FROM `user` WHERE emailAdress = ?";
                 let values = [emailAdress];
-                if (req.params.userId != undefined) {
-                    query += " OR id = ?";
-                    values.push(req.params.userId);
-                }
+                // if (req.params.userId != undefined) {
+                //     query += " OR id = ?";
+                //     values.push(req.params.userId);
+                // }
                 conn.query(
                     query,
                     values,
@@ -51,11 +51,11 @@ module.exports = {
                 let reqJWTtoken = authHeader.substring(7, authHeader.length);
                 var jwt = require('jsonwebtoken');
                 jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
-                if (JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
-                    let error = Error("You need to be the owner.");
-                    error.status = 403;
-                    next(error);
-                }
+                // if (JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
+                //     let error = Error("You need to be the owner.");
+                //     error.status = 403;
+                //     next(error);
+                // }
                 if (jwt.userId) {
                     const User = require('../objects/User');
                     let user = new User({ id: jwt.userId });
