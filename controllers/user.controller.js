@@ -283,7 +283,7 @@ const userController = {
                             res.status(200).json(
                             {
                                 status: 200,
-                                message: "User met ID " + id + " is verwijderd",
+                                message: "Gebruiker met ID " + id + " is verwijderd",
                                 data: {}
                             }
                         )};
