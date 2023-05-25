@@ -1,6 +1,6 @@
 class Meal {
-    constructor(name, description, isActive, isVega, isVegan, isToTakeHome, dateTime, maxAmountOfParticipants, price, imageUrl, allergenes, cook, participants) {
-        this.id = database.users.length + 1;
+    constructor({name, description, isActive, isVega, isVegan, isToTakeHome, dateTime, maxAmountOfParticipants, price, imageUrl, allergenes, cook, participants}) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
