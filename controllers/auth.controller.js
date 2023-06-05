@@ -58,9 +58,38 @@ module.exports = {
                 // }
                 if (jwt.userId) {
                     const User = require('../objects/User');
-                    let user = new User({ id: jwt.userId });
-                    req.user = user;
-                    next()
+                    const pool = require('../Database');
+                    pool.getConnection(function (connectionError, conn) {
+                        if (connectionError) {
+                            return null;
+                        }
+                        if (conn) {
+                            let query = "SELECT * FROM `user` WHERE id = ?";
+                            let values = [jwt.userId];
+                            // if (req.params.userId != undefined) {
+                            //     query += " OR id = ?";
+                            //     values.push(req.params.userId);
+                            // }
+                            conn.query(
+                                query,
+                                values,
+                                function (queryError, results, fields) {
+                                    if (queryError) return null;
+                                    if (results.length == 0) {
+                                        let error = new Error("User does not exist");
+                                        error.status = 404
+                                        next(error);
+                                    } else {
+                                        var user = new User(results[0]);
+                                        req.user = user;
+                                        next();
+                                    }
+                                }
+                            );
+                            pool.releaseConnection(conn);
+                        }
+                    });
+                    // next()
                 } else {
                     next({
                         status: 401,
