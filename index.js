@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 
 // const userRouter = require('./routes/user.routes');
 // app.use("/api", userRouter);
-app.all((req, res, next) => {
+app.use((req, res, next) => {
     res.json(req.body);
 })
 // const mealRouter = require('./routes/meal.routes');
