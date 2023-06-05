@@ -9,7 +9,7 @@ const mealController = {
             let mealEntries = Object.entries(meal);
             let mealValuesWithoutNull = mealEntries.filter(value => value[1] != undefined);
             mealValuesWithoutNull = Object.fromEntries(mealValuesWithoutNull);
-            let columns = ["name", "description", "price", "dateTime", "maxAmountOfParticipants", "imageUr"];
+            let columns = ["name", "description", "price", "dateTime", "maxAmountOfParticipants", "imageUrl"];
             let columnsWithValues = {};
             let everyColumnPresent = columns.every((element) => {
                 let count = Object.keys(mealValuesWithoutNull).filter(i => i == element).length;

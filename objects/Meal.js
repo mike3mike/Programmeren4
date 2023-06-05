@@ -1,5 +1,5 @@
 class Meal {
-    constructor({name, description, isActive, isVega, isVegan, isToTakeHome, dateTime, maxAmountOfParticipants, price, imageUrl, allergenes, cook, participants}) {
+    constructor({id, name, description, isActive, isVega, isVegan, isToTakeHome, dateTime, maxAmountOfParticipants, price, imageUrl, allergenes, cook, participants}) {
         this.id = id;
         this.name = name;
         this.description = description;

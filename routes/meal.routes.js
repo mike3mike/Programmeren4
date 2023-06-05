@@ -4,7 +4,7 @@ const mealController = require('../controllers/meal.controller');
 const router = express.Router();
 
 // UC-301
-router.post('', mealController.addMeal)
+router.post('', authController.validate, mealController.addMeal)
 // UC-302
 router.put('/:mealId', mealController.changeMeal)
 
