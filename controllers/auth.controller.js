@@ -51,11 +51,6 @@ module.exports = {
                 let reqJWTtoken = authHeader.substring(7, authHeader.length);
                 var jwt = require('jsonwebtoken');
                 jwt = jwt.verify(reqJWTtoken, "ajwtsecret");
-                // if (JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
-                //     let error = Error("You need to be the owner.");
-                //     error.status = 403;
-                //     next(error);
-                // }
                 if (jwt.userId) {
                     const User = require('../objects/User');
                     const pool = require('../Database');
@@ -63,11 +58,12 @@ module.exports = {
                         if (connectionError) { next(connectionError) }
                         if (conn) {
                             let query = "SELECT * FROM `user` WHERE id = ?";
-                            let values = [jwt.userId];
-                            // if (req.params.userId != undefined) {
-                            //     query += " OR id = ?";
-                            //     values.push(req.params.userId);
-                            // }
+                            let values;
+                            if (req.params.userId) {
+                                values = [req.params.userId];
+                            } else {
+                                values = [jwt.userId];
+                            }
                             conn.query(
                                 query,
                                 values,

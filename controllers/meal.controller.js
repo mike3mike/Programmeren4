@@ -160,7 +160,7 @@ const mealController = {
                             next(error);
                         } else {
                             res.status(201).json({
-                                status: 201,
+                                status: 200,
                                 message: "Get meal list",
                                 data: results
                             });
