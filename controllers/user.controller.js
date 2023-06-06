@@ -245,7 +245,7 @@ const userController = {
                 );
                 conn.query(
                     "SELECT * FROM `user` WHERE id = ?",
-                    [loggedInUser.id],
+                    [req.params.userId],
                     function (err, results) {
                         if (err) {
                             next(err);
