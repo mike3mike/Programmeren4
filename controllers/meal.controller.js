@@ -196,7 +196,12 @@ const mealController = {
                     query,
                     [id],
                     function (err, results) {
-                        if (err) { next(err); } else {
+                        console.log(results.affectedRows);
+                        if (err) { next(err); } else if (results.affectedRows == 0) {
+                            let error = new Error("Meal does not exist.");
+                            error.status = 404
+                            next(error);
+                        } else {
                             res.status(200).json(
                             {
                                 status: 200,

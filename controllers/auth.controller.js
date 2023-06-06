@@ -77,7 +77,7 @@ module.exports = {
                                         let error = new Error("User does not exist");
                                         error.status = 404
                                         next(error);
-                                    } else if (req.params.userId && JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
+                                    } else if (req.params.userId != null && JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
                                         let error = Error("You need to be the owner.");
                                         error.status = 403;
                                         next(error);
