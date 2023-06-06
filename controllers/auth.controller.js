@@ -60,9 +60,7 @@ module.exports = {
                     const User = require('../objects/User');
                     const pool = require('../Database');
                     pool.getConnection(function (connectionError, conn) {
-                        if (connectionError) {
-                            return null;
-                        }
+                        if (connectionError) { next(connectionError) }
                         if (conn) {
                             let query = "SELECT * FROM `user` WHERE id = ?";
                             let values = [jwt.userId];
@@ -78,6 +76,10 @@ module.exports = {
                                     if (results.length == 0) {
                                         let error = new Error("User does not exist");
                                         error.status = 404
+                                        next(error);
+                                    } if (req.params.userId && JSON.parse(Buffer.from(reqJWTtoken.split(".")[1], "base64").toString()).userId != req.params.userId) {
+                                        let error = Error("You need to be the owner.");
+                                        error.status = 403;
                                         next(error);
                                     } else {
                                         var user = new User(results[0]);

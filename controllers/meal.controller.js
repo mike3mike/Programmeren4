@@ -91,8 +91,11 @@ const mealController = {
                         conn.query(
                             query,
                             function (err, results) {
-                                if (err) {
-                                    next(err);
+                                if (err) { next(err); }
+                                if (results.affectedRows == 0) {
+                                    let error = new Error("Meal does not exist.");
+                                    error.status = 404
+                                    next(error);
                                 }
                             }
                         );
