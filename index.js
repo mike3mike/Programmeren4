@@ -9,7 +9,8 @@ app.use((req, res, next) => {
         method: req.method,
         body: req.body,
         authPayload: JSON.parse(Buffer.from(req.headers.authorization.substring(7, req.headers.authorization.length).split(".")[1], "base64").toString())
-    })
+    });
+    next();
 })
 
 // const userRouter = require('./routes/user.routes');
