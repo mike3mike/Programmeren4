@@ -9,7 +9,7 @@ router.post('', authController.validate, mealController.addMeal)
 router.put('/:mealId', authController.validate, mealController.changeMeal)
 
 // UC-303
-router.get("/profile", mealController.getMeals)
+router.get("", mealController.getMeals)
 
 // UC-304
 router.get("/:mealId", mealController.getMealById)

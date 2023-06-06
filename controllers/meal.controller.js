@@ -127,11 +127,6 @@ const mealController = {
     },
 
     getMeals: (req, res, next) => {
-        let reqBody = req.body;
-        let meal = new Meal(reqBody);
-        let mealEntries = Object.entries(meal);
-        let mealValuesWithoutNull = mealEntries.filter(value => value[1] != undefined);
-        mealValuesWithoutNull = Object.fromEntries(mealValuesWithoutNull);
         pool.getConnection(function (connectionError, conn) {
             if (connectionError) {
                 next(connectionError);
@@ -140,18 +135,16 @@ const mealController = {
                 let query = "SELECT * FROM `meal`";
                 conn.query(
                     query,
-                    Object.values(columnsWithValues),
                     function (queryError, results, fields) {
                         if (queryError) {
                             let error = new Error(queryError.message);
                             error.status = 403
                             next(error);
                         } else {
-                            // TODO: Hide ALL passwords
-                            res.status(201).json({
+                                res.status(201).json({
                                 status: 201,
                                 message: "Get meal list",
-                                data: meal
+                                data: results
                             });
                         }
                     }
