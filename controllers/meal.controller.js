@@ -61,7 +61,6 @@ const mealController = {
 
     changeMeal: (req, res, next) => {
         let reqBody = req.body;
-        let loggedInUser = req.user;
         try {
             let meal = new Meal(reqBody);
             let mealEntries = Object.entries(meal);
