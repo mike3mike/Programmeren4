@@ -8,7 +8,7 @@ app.use((req, res, next) => {
         url: req.originalUrl,
         method: req.method,
         body: req.body,
-        authPayload: JSON.parse(Buffer.from(req.headers.authorization.substring(7, req.headers.authorization.length).split(".")[1], "base64").toString())
+        authPayload: req.headers.authorization ? JSON.parse(Buffer.from(req.headers.authorization.substring(7, req.headers.authorization.length).split(".")[1], "base64").toString()) : "ll"
     });
     next();
 })
