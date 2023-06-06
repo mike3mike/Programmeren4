@@ -190,7 +190,7 @@ const mealController = {
                                 res.status(200).json({
                                     status: 200,
                                     message: "Meal by id",
-                                    data: results[0][0]
+                                    data: results[0]
                                 });
                             }
                         }
