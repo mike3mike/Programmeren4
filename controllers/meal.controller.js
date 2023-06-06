@@ -1,5 +1,6 @@
 const pool = require('../Database');
 const Meal = require('../objects/Meal');
+const { login } = require('./auth.controller');
 
 const mealController = {
     addMeal: (req, res, next) => {
@@ -80,7 +81,17 @@ const mealController = {
                 pool.getConnection(function (err, conn) {
                     if (err) { next(err) }
                     if (conn) {
-                        let query = 'UPDATE `meal` SET ';
+                        conn.query(
+                            "SELECT pu.userId FROM meal m JOIN meal_participants_user pu ON pu.mealId = m.id WHERE m.id = ? && pu.userId = ? LIMIT 1",
+                            [req.params.mealId, req.user.id],
+                            function (err, results) {
+                                if (err) { next(err); } else {
+                                    if (results.length == 0) {
+                                        let error = new Error("User does not have meal.");
+                                        error.status = 403
+                                        next(error);
+                                    } else {
+                                        let query = 'UPDATE `meal` SET ';
                         let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
                         columns.forEach(([key, value]) => {
                             query += key + " = '" + req.body[key] + "',\r\n";
@@ -114,6 +125,10 @@ const mealController = {
                                 }
                             }
                         );
+                                    }
+                                }
+                            }
+                        );
                         pool.releaseConnection(conn);
                     }
                 });
@@ -144,7 +159,7 @@ const mealController = {
                             error.status = 403
                             next(error);
                         } else {
-                                res.status(201).json({
+                            res.status(201).json({
                                 status: 201,
                                 message: "Get meal list",
                                 data: results
@@ -166,7 +181,7 @@ const mealController = {
                     'SELECT  * FROM `meal` WHERE meal.id = ' + paramId,
                     function (err, results) {
                         if (err) { next(err) } else {
-                            if (results.length == 0){
+                            if (results.length == 0) {
                                 next({
                                     status: 404,
                                     message: "Meal not found"
@@ -176,7 +191,7 @@ const mealController = {
                                     status: 200,
                                     message: "Meal by id",
                                     data: results
-                            });
+                                });
                             }
                         }
                     }
@@ -196,19 +211,19 @@ const mealController = {
                     query,
                     [id],
                     function (err, results) {
-                        console.log(results.affectedRows);
                         if (err) { next(err); } else if (results.affectedRows == 0) {
                             let error = new Error("Meal does not exist.");
                             error.status = 404
                             next(error);
                         } else {
                             res.status(200).json(
-                            {
-                                status: 200,
-                                message: "Maaltijd met ID " + id + " is verwijderd",
-                                data: {}
-                            }
-                        )};
+                                {
+                                    status: 200,
+                                    message: "Maaltijd met ID " + id + " is verwijderd",
+                                    data: {}
+                                }
+                            )
+                        };
                     }
                 );
                 pool.releaseConnection(conn);
@@ -281,12 +296,13 @@ const participationController = {
                                 });
                             }
                             res.status(200).json(
-                            {
-                                status: 200,
-                                message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
-                                data: {results}
-                            }
-                        )};
+                                {
+                                    status: 200,
+                                    message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
+                                    data: { results }
+                                }
+                            )
+                        };
                     }
                 );
                 pool.releaseConnection(conn);
