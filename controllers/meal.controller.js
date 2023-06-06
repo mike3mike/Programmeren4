@@ -92,39 +92,39 @@ const mealController = {
                                         next(error);
                                     } else {
                                         let query = 'UPDATE `meal` SET ';
-                        let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
-                        columns.forEach(([key, value]) => {
-                            query += key + " = '" + req.body[key] + "',\r\n";
-                        })
-                        query = query.substring(0, query.length - 3);
-                        query += "\r\nWHERE id = " + req.params.mealId;
-                        conn.query(
-                            query,
-                            function (err, results) {
-                                if (err) { next(err); }
-                                if (results.affectedRows == 0) {
-                                    let error = new Error("Meal does not exist.");
-                                    error.status = 404
-                                    next(error);
-                                } else {
-                                    conn.query(
-                                        "SELECT * FROM `meal` WHERE id = ?",
-                                        [req.params.mealId],
-                                        function (err, results) {
-                                            if (err) {
-                                                next(err);
-                                            } else {
-                                                res.status(200).json({
-                                                    status: 200,
-                                                    message: "Update Meal",
-                                                    data: results
-                                                });
+                                        let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
+                                        columns.forEach(([key, value]) => {
+                                            query += key + " = '" + req.body[key] + "',\r\n";
+                                        })
+                                        query = query.substring(0, query.length - 3);
+                                        query += "\r\nWHERE id = " + req.params.mealId;
+                                        conn.query(
+                                            query,
+                                            function (err, results) {
+                                                if (err) { next(err); }
+                                                if (results.affectedRows == 0) {
+                                                    let error = new Error("Meal does not exist.");
+                                                    error.status = 404
+                                                    next(error);
+                                                } else {
+                                                    conn.query(
+                                                        "SELECT * FROM `meal` WHERE id = ?",
+                                                        [req.params.mealId],
+                                                        function (err, results) {
+                                                            if (err) {
+                                                                next(err);
+                                                            } else {
+                                                                res.status(200).json({
+                                                                    status: 200,
+                                                                    message: "Update Meal",
+                                                                    data: results
+                                                                });
+                                                            }
+                                                        }
+                                                    );
+                                                }
                                             }
-                                        }
-                                    );
-                                }
-                            }
-                        );
+                                        );
                                     }
                                 }
                             }
@@ -234,23 +234,9 @@ const mealController = {
 
 const participationController = {
     register: (req, res, next) => {
-        // new User({
-        //     // firstName,
-        //     // lastName,
-        //     // street,
-        //     // city,
-        //     // emailAdress,
-        //     // password,
-        //     // phoneNumber
-        // });
-        // new Meal({
-
-        // });
         // let requiredAttributes = [firstName, lastName, street, city, emailAdress, password, phoneNumber];
         pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                next(connectionError);
-            }
+            if (connectionError) { next(connectionError); }
             if (conn) {
                 let query = "INSERT INTO meal_participants_user (mealId, userId) SELECT ?,? FROM meal m WHERE (SELECT COUNT(*) FROM meal_participants_user up WHERE up.mealId = ?) < m.maxAmountOfParticipants && m.id = ?";
                 conn.query(
@@ -262,15 +248,24 @@ const participationController = {
                             error.status = 403
                             next(error);
                         } else {
-                            conn.query("SELECT COUNT(*) AS participantCount FROM meal_participants_user up WHERE up.mealId = ?", [req.params.mealId], function (queryError, results, fields) {
-                                if (results.affectedRows > 0) {
+                            conn.query("SELECT COUNT(*) AS participantCount FROM meal_participants_user up WHERE up.mealId = ?", [req.params.mealId], function (queryError, participantCount, fields) {
+                                if (participantCount.participantCount == 0) {
+                                    res.status(200).json({
+                                        status: 404,
+                                        message: "Meal does not exist. User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
+                                        data: {
+                                            "currentlyParticipating": false,
+                                            "currentAmountOfParticipants": participantCount[0].participantCount
+                                        }
+                                    });
+                                } else if (results.affectedRows > 0) {
                                     res.status(200).json({
                                         status: 200,
                                         message: "User met ID " + req.user.id + " is aangemeld voor maaltijd met ID " + req.params.mealId,
                                         data: {
                                             "currentlyParticipating": true,
-                                            "currentAmountOfParticipants": results[0].participantCount
-                                          }
+                                            "currentAmountOfParticipants": participantCount[0].participantCount
+                                        }
                                     });
                                 } else {
                                     res.status(200).json({
@@ -279,7 +274,7 @@ const participationController = {
                                         data: {
                                             "currentlyParticipating": false,
                                             "currentAmountOfParticipants": results[0].participantCount
-                                          }
+                                        }
                                     });
                                 }
                             });
