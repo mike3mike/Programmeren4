@@ -160,7 +160,7 @@ const mealController = {
             if (err) { next(err); }
             if (conn) {
                 conn.query(
-                    'SELECT  *, user.id AS userId FROM `meal` LEFT JOIN meal_participants_user mpu ON mpu.userId = user.id LEFT JOIN user m ON m.id = mpu.mealId WHERE meal.id = ' + paramId,
+                    'SELECT  * FROM `meal` WHERE meal.id = ' + paramId,
                     function (err, results) {
                         if (err) { next(err) } else {
                             if (results.length == 0){
@@ -209,4 +209,85 @@ const mealController = {
     }
 }
 
-module.exports = mealController;
+const participationController = {
+    register: (req, res, next) => {
+        res.json(req.body);
+        // new User({
+        //     // firstName,
+        //     // lastName,
+        //     // street,
+        //     // city,
+        //     // emailAdress,
+        //     // password,
+        //     // phoneNumber
+        // });
+        // new Meal({
+
+        // });
+        // let requiredAttributes = [firstName, lastName, street, city, emailAdress, password, phoneNumber];
+        // pool.getConnection(function (connectionError, conn) {
+        //     if (connectionError) {
+        //         next(connectionError);
+        //     }
+        //     if (conn) {
+        //         let query = "INSERT INTO `user` (" + columns.join(",") + ") VALUES (" + ("?,".repeat(columns.length)).substring(0, (columns.length * 2) - 1) + ")";
+        //         conn.query(
+        //             query,
+        //             Object.values(columnsWithValues),
+        //             function (queryError, results, fields) {
+        //                 if (queryError) {
+        //                     let error = new Error(queryError.message);
+        //                     error.status = 403
+        //                     next(error);
+        //                 } else {
+        //                     user.id = results.insertId;
+        //                     res.status(201).json({
+        //                         status: 201,
+        //                         message: "Register user",
+        //                         data: user
+        //                     });
+        //                 }
+        //             }
+        //         );
+        //         pool.releaseConnection(conn);
+        //     }
+        // });
+    },
+
+    delete: (req, res, next) => {
+        var mealId = req.params.mealId;
+        pool.getConnection(function (err, conn) {
+            if (err) { next(err) }
+            if (conn) {
+                let query = 'DELETE FROM `meal_participants_user` WHERE mealId = ? AND userId = ?';
+                conn.query(
+                    query,
+                    [mealId, req.user.id],
+                    function (err, results) {
+                        if (err) { next(err); } else {
+                            if (results.affectedRows == 0) {
+                                res.status(404).json({
+                                    status: 404,
+                                    message: "No data data matched.",
+                                    data: []
+                                });
+                            }
+                            res.status(200).json(
+                            {
+                                status: 200,
+                                message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
+                                data: {results}
+                            }
+                        )};
+                    }
+                );
+                pool.releaseConnection(conn);
+            }
+        });
+    }
+}
+
+module.exports = {
+    mealController: mealController,
+    participationController: participationController
+}

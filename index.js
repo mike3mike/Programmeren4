@@ -7,8 +7,6 @@ const userRouter = require('./routes/user.routes');
 app.use("/api", userRouter);
 const mealRouter = require('./routes/meal.routes');
 app.use("/api/meal", mealRouter);
-const participationRouter = require('./routes/participation.routes');
-app.use("/api", participationRouter);
 
 app.use((err, req, res, next) => {
     // if (err.code != undefined) {
