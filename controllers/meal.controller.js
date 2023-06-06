@@ -61,6 +61,7 @@ const mealController = {
 
     changeMeal: (req, res, next) => {
         let reqBody = req.body;
+        let loggedInUser = req.user;
         try {
             let meal = new Meal(reqBody);
             let mealEntries = Object.entries(meal);
@@ -77,26 +78,35 @@ const mealController = {
                 return false;
             });
             if (everyColumnPresent) {
-                pool.getConnection(function (connectionError, conn) {
-                    if (connectionError) {
-                        next(connectionError);
-                    }
+                pool.getConnection(function (err, conn) {
+                    if (err) { next(err) }
                     if (conn) {
-                        let query = "UPDATE `meal` (" + columns.join(",") + ") VALUES (" + ("?,".repeat(columns.length)).substring(0, (columns.length * 2) - 1) + ")";
+                        let query = 'UPDATE `meal` SET ';
+                        let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
+                        columns.forEach(([key, value]) => {
+                            query += key + " = '" + req.body[key] + "',\r\n";
+                        })
+                        query = query.substring(0, query.length - 3);
+                        query += "\r\nWHERE id = " + req.params.mealId;
                         conn.query(
                             query,
-                            Object.values(columnsWithValues),
-                            function (queryError, results, fields) {
-                                if (queryError) {
-                                    let error = new Error(queryError.message);
-                                    error.status = 403
-                                    next(error);
+                            function (err, results) {
+                                if (err) {
+                                    next(err);
+                                }
+                            }
+                        );
+                        conn.query(
+                            "SELECT * FROM `meal` WHERE id = ?",
+                            [req.params.mealId],
+                            function (err, results) {
+                                if (err) {
+                                    next(err);
                                 } else {
-                                    meal.id = results.insertId;
-                                    res.status(201).json({
-                                        status: 201,
-                                        message: "Register meal",
-                                        data: meal
+                                    res.status(200).json({
+                                        status: 200,
+                                        message: "Update Meal",
+                                        data: results
                                     });
                                 }
                             }

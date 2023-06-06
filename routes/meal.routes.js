@@ -6,7 +6,7 @@ const router = express.Router();
 // UC-301
 router.post('', authController.validate, mealController.addMeal)
 // UC-302
-router.put('/:mealId', mealController.changeMeal)
+router.put('/:mealId', authController.validate, mealController.changeMeal)
 
 // UC-303
 router.get("/profile", mealController.getMeals)
@@ -15,7 +15,7 @@ router.get("/profile", mealController.getMeals)
 router.get("/:mealId", mealController.getMealById)
 
 // UC-305
-router.delete("/:mealId", mealController.deleteMeal)
+router.delete("/:mealId", authController.validate, mealController.deleteMeal)
 
 
 module.exports = router;
