@@ -190,7 +190,7 @@ const mealController = {
                                 res.status(200).json({
                                     status: 200,
                                     message: "Meal by id",
-                                    data: results
+                                    data: results[0]
                                 });
                             }
                         }
@@ -234,7 +234,6 @@ const mealController = {
 
 const participationController = {
     register: (req, res, next) => {
-        res.json(req.body);
         // new User({
         //     // firstName,
         //     // lastName,
@@ -248,33 +247,48 @@ const participationController = {
 
         // });
         // let requiredAttributes = [firstName, lastName, street, city, emailAdress, password, phoneNumber];
-        // pool.getConnection(function (connectionError, conn) {
-        //     if (connectionError) {
-        //         next(connectionError);
-        //     }
-        //     if (conn) {
-        //         let query = "INSERT INTO `user` (" + columns.join(",") + ") VALUES (" + ("?,".repeat(columns.length)).substring(0, (columns.length * 2) - 1) + ")";
-        //         conn.query(
-        //             query,
-        //             Object.values(columnsWithValues),
-        //             function (queryError, results, fields) {
-        //                 if (queryError) {
-        //                     let error = new Error(queryError.message);
-        //                     error.status = 403
-        //                     next(error);
-        //                 } else {
-        //                     user.id = results.insertId;
-        //                     res.status(201).json({
-        //                         status: 201,
-        //                         message: "Register user",
-        //                         data: user
-        //                     });
-        //                 }
-        //             }
-        //         );
-        //         pool.releaseConnection(conn);
-        //     }
-        // });
+        pool.getConnection(function (connectionError, conn) {
+            if (connectionError) {
+                next(connectionError);
+            }
+            if (conn) {
+                let query = "INSERT INTO meal_participants_user (mealId, userId) SELECT ?,? FROM meal m WHERE (SELECT COUNT(*) FROM meal_participants_user up WHERE up.mealId = ?) < m.maxAmountOfParticipants && m.id = ?";
+                conn.query(
+                    query,
+                    [req.params.mealId, req.user.id, req.params.mealId, req.params.mealId],
+                    function (queryError, results, fields) {
+                        if (queryError) {
+                            let error = new Error(queryError.message);
+                            error.status = 403
+                            next(error);
+                        } else {
+                            conn.query("SELECT COUNT(*) AS participantCount FROM meal_participants_user up WHERE up.mealId = ?", [req.params.mealId], function (queryError, results, fields) {
+                                if (results.affectedRows > 0) {
+                                    res.status(200).json({
+                                        status: 200,
+                                        message: "User met ID " + req.user.id + " is aangemeld voor maaltijd met ID " + req.params.mealId,
+                                        data: {
+                                            "currentlyParticipating": true,
+                                            "currentAmountOfParticipants": results[0].participantCount
+                                          }
+                                    });
+                                } else {
+                                    res.status(200).json({
+                                        status: 200,
+                                        message: "User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
+                                        data: {
+                                            "currentlyParticipating": false,
+                                            "currentAmountOfParticipants": results[0].participantCount
+                                          }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                );
+                pool.releaseConnection(conn);
+            }
+        });
     },
 
     delete: (req, res, next) => {
