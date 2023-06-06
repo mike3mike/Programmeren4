@@ -96,21 +96,22 @@ const mealController = {
                                     let error = new Error("Meal does not exist.");
                                     error.status = 404
                                     next(error);
-                                }
-                            }
-                        );
-                        conn.query(
-                            "SELECT * FROM `meal` WHERE id = ?",
-                            [req.params.mealId],
-                            function (err, results) {
-                                if (err) {
-                                    next(err);
                                 } else {
-                                    res.status(200).json({
-                                        status: 200,
-                                        message: "Update Meal",
-                                        data: results
-                                    });
+                                    conn.query(
+                                        "SELECT * FROM `meal` WHERE id = ?",
+                                        [req.params.mealId],
+                                        function (err, results) {
+                                            if (err) {
+                                                next(err);
+                                            } else {
+                                                res.status(200).json({
+                                                    status: 200,
+                                                    message: "Update Meal",
+                                                    data: results
+                                                });
+                                            }
+                                        }
+                                    );
                                 }
                             }
                         );

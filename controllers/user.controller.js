@@ -161,7 +161,7 @@ const userController = {
                                 res.status(200).json({
                                     status: 200,
                                     message: "Profile by id",
-                                    data: results
+                                    data: results[0]
                             });
                             }
                         }
@@ -253,7 +253,7 @@ const userController = {
                             res.status(200).json({
                                 status: 200,
                                 message: "Update User",
-                                data: results
+                                data: results[0]
                             });
                         }
                     }
