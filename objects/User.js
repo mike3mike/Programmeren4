@@ -8,11 +8,12 @@ class User {
         this.lastName = lastName;
         this.street = street;
         this.city = city;
-        if (isActive == "1") {
-            this.isActive = true;
-        } else {
-            this.isActive = false;
-        };
+        // if (isActive == "1") {
+        //     this.isActive = true;
+        // } else {
+        //     this.isActive = false;
+        // };
+        this.isActive = parseInt(isActive);
         this.roles = roles;
         if (password) { 
             this.setPassword(password); 
