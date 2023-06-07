@@ -82,8 +82,8 @@ const mealController = {
                     if (err) { next(err) }
                     if (conn) {
                         conn.query(
-                            "SELECT * FROM `meal WHERE id = ?`",
-                            [req.params.mealId, req.user.id],
+                            "SELECT * FROM `meal` WHERE id = ?",
+                            [req.params.mealId],
                             function (err, results) {
                                 if (err) { next(err); }
                                 if (results.affectedRows == 0) {
