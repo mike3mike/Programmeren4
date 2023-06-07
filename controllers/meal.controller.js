@@ -82,33 +82,35 @@ const mealController = {
                     if (err) { next(err) }
                     if (conn) {
                         conn.query(
-                            "SELECT pu.userId FROM meal m JOIN meal_participants_user pu ON pu.mealId = m.id WHERE m.id = ? && pu.userId = ? LIMIT 1",
+                            "SELECT * FROM `meal WHERE id = ?`",
                             [req.params.mealId, req.user.id],
                             function (err, results) {
-                                if (err) { next(err); } else {
-                                    if (results.length == 0) {
-                                        let error = new Error("User does not have meal.");
-                                        error.status = 403
-                                        next(error);
-                                    } else {
-                                        let query = 'UPDATE `meal` SET ';
-                                        let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
-                                        columns.forEach(([key, value]) => {
-                                            query += key + " = '" + req.body[key] + "',\r\n";
-                                        })
-                                        query = query.substring(0, query.length - 3);
-                                        query += "\r\nWHERE id = " + req.params.mealId;
-                                        conn.query(
-                                            query,
-                                            function (err, results) {
-                                                if (err) { next(err); }
-                                                if (results.affectedRows == 0) {
-                                                    let error = new Error("Meal does not exist.");
-                                                    error.status = 404
+                                if (err) { next(err); }
+                                if (results.affectedRows == 0) {
+                                    let error = new Error("Meal does not exist.");
+                                    error.status = 404
+                                    next(error);
+                                } else {
+                                    conn.query(
+                                        "SELECT pu.userId FROM meal m JOIN meal_participants_user pu ON pu.mealId = m.id WHERE m.id = ? && pu.userId = ? LIMIT 1",
+                                        [req.params.mealId, req.user.id],
+                                        function (err, results) {
+                                            if (err) { next(err); } else {
+                                                if (results.length == 0) {
+                                                    let error = new Error("User does not have meal.");
+                                                    error.status = 403
                                                     next(error);
                                                 } else {
+                                                    let query = 'UPDATE `meal` SET ';
+                                                    let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
+                                                    columns.forEach(([key, value]) => {
+                                                        query += key + " = '" + req.body[key] + "',\r\n";
+                                                    })
+                                                    query = query.substring(0, query.length - 3);
+                                                    query += "\r\nWHERE id = " + req.params.mealId;
+
                                                     conn.query(
-                                                        "SELECT * FROM `meal` WHERE id = ?",
+                                                        query,
                                                         [req.params.mealId],
                                                         function (err, results) {
                                                             if (err) {
@@ -124,11 +126,12 @@ const mealController = {
                                                     );
                                                 }
                                             }
-                                        );
-                                    }
+                                        }
+                                    );
                                 }
                             }
                         );
+
                         pool.releaseConnection(conn);
                     }
                 });
