@@ -9,9 +9,9 @@ class User {
         this.street = street;
         this.city = city;
         if (isActive == "1") {
-            this.isActive = "true";
+            this.isActive = true;
         } else {
-            this.isActive = "false";
+            this.isActive = false;
         };
         this.roles = roles;
         if (password) { 
