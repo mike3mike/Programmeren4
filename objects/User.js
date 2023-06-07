@@ -8,8 +8,10 @@ class User {
         this.lastName = lastName;
         this.street = street;
         this.city = city;
-        if (isActive) {
-            this.isActive = isActive;
+        if (isActive == "1") {
+            this.isActive = "true";
+        } else {
+            this.isActive = "false";
         };
         this.roles = roles;
         if (password) { 
