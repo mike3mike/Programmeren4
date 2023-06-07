@@ -273,7 +273,7 @@ const participationController = {
                                         message: "User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
                                         data: {
                                             "currentlyParticipating": false,
-                                            "currentAmountOfParticipants": results[0].participantCount
+                                            "currentAmountOfParticipants": participantCount[0].participantCount
                                         }
                                     });
                                 }

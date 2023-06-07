@@ -8,7 +8,9 @@ class User {
         this.lastName = lastName;
         this.street = street;
         this.city = city;
-        this.isActive = isActive;
+        if (isActive) {
+            this.isActive = isActive;
+        };
         this.roles = roles;
         if (password) { 
             this.setPassword(password); 
