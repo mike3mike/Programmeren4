@@ -96,7 +96,7 @@ const mealController = {
                                         [req.params.mealId, req.user.id],
                                         function (err, results) {
                                             console.log(results);
-                                            res.json(results);
+                                            res.send([req.params.mealId, req.user.id]);
                                             // if (err) { next(err); } else {
                                             //     if (results.length == 0) {
                                             //         let error = new Error("User does not have meal.");
