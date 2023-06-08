@@ -104,7 +104,7 @@ const mealController = {
                                                 } else {
                                                     let query = 'UPDATE `meal` SET ';
                                                     let meal = new Meal(req.body);
-                                                    let columns = Object.entries(meal).filter(value => value[1] != undefined);
+                                                    let columns = Object.entries(columnsWithValues).filter(value => value[1] != undefined);
                                                     columns.forEach(([key, value]) => {
                                                         query += key + " = '" + req.body[key] + "',\r\n";
                                                     })
