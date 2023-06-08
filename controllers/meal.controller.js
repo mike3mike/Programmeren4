@@ -92,43 +92,42 @@ const mealController = {
                                     next(error);
                                 } else {
                                     conn.query(
-                                        "SELECT * from meal",
+                                        "SELECT m.id FROM meal m WHERE m.id = ? AND (m.cookId = ? m.cookId is NULL) LIMIT 1",
                                         [req.params.mealId, req.user.id],
                                         function (err, results) {
                                             console.log(results);
-                                            res.send([req.params.mealId, req.user.id]);
-                                            // if (err) { next(err); } else {
-                                            //     if (results.length == 0) {
-                                            //         let error = new Error("User does not have meal.");
-                                            //         error.status = 403
-                                            //         next(error);
-                                            //     } else {
-                                            //         let query = 'UPDATE `meal` SET ';
-                                            //         let meal = new Meal(req.body);
-                                            //         let columns = Object.entries(meal).filter(value => value[1] != undefined);
-                                            //         columns.forEach(([key, value]) => {
-                                            //             query += key + " = '" + req.body[key] + "',\r\n";
-                                            //         })
-                                            //         query = query.substring(0, query.length - 3);
-                                            //         query += "\r\nWHERE id = " + req.params.mealId;
+                                            if (err) { next(err); } else {
+                                                if (results.length == 0) {
+                                                    let error = new Error("User does not have meal.");
+                                                    error.status = 403
+                                                    next(error);
+                                                } else {
+                                                    let query = 'UPDATE `meal` SET ';
+                                                    let meal = new Meal(req.body);
+                                                    let columns = Object.entries(meal).filter(value => value[1] != undefined);
+                                                    columns.forEach(([key, value]) => {
+                                                        query += key + " = '" + req.body[key] + "',\r\n";
+                                                    })
+                                                    query = query.substring(0, query.length - 3);
+                                                    query += "\r\nWHERE id = " + req.params.mealId;
 
-                                            //         conn.query(
-                                            //             query,
-                                            //             function (err, results) {
-                                            //                 if (err) {
-                                            //                     next(err);
-                                            //                 } else {
-                                            //                     meal.id = req.params.mealId;
-                                            //                     res.status(200).json({
-                                            //                         status: 200,
-                                            //                         message: "Update Meal",
-                                            //                         data: meal
-                                            //                     });
-                                            //                 }
-                                            //             }
-                                            //         );
-                                            //     }
-                                            // }
+                                                    conn.query(
+                                                        query,
+                                                        function (err, results) {
+                                                            if (err) {
+                                                                next(err);
+                                                            } else {
+                                                                meal.id = req.params.mealId;
+                                                                res.status(200).json({
+                                                                    status: 200,
+                                                                    message: "Update Meal",
+                                                                    data: meal
+                                                                });
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                            }
                                         }
                                     );
                                 }
@@ -254,7 +253,7 @@ const participationController = {
                             error.status = 403
                             next(error);
                         } else {
-                            conn.query("SELECT COUNT(*) AS participantCount FROM meal WHERE id = ?", [req.params.mealId], function (queryError, participantCount, fields) {
+                            conn.query("SELECT COUNT(*) AS participantCount FROM meal_participants_user up WHERE up.mealId = ?", [req.params.mealId], function (queryError, participantCount, fields) {
                                 if (participantCount.participantCount == 0) {
                                     res.status(200).json({
                                         status: 404,
