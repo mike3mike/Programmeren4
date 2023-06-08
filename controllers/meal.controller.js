@@ -92,41 +92,43 @@ const mealController = {
                                     next(error);
                                 } else {
                                     conn.query(
-                                        "SELECT m.id FROM meal m WHERE m.id = ? AND m.cookId = ? LIMIT 1",
+                                        "SELECT * from meal",
                                         [req.params.mealId, req.user.id],
                                         function (err, results) {
-                                            if (err) { next(err); } else {
-                                                if (results.length == 0) {
-                                                    let error = new Error("User does not have meal.");
-                                                    error.status = 403
-                                                    next(error);
-                                                } else {
-                                                    let query = 'UPDATE `meal` SET ';
-                                                    let meal = new Meal(req.body);
-                                                    let columns = Object.entries(meal).filter(value => value[1] != undefined);
-                                                    columns.forEach(([key, value]) => {
-                                                        query += key + " = '" + req.body[key] + "',\r\n";
-                                                    })
-                                                    query = query.substring(0, query.length - 3);
-                                                    query += "\r\nWHERE id = " + req.params.mealId;
+                                            console.log(results);
+                                            res.json(results);
+                                            // if (err) { next(err); } else {
+                                            //     if (results.length == 0) {
+                                            //         let error = new Error("User does not have meal.");
+                                            //         error.status = 403
+                                            //         next(error);
+                                            //     } else {
+                                            //         let query = 'UPDATE `meal` SET ';
+                                            //         let meal = new Meal(req.body);
+                                            //         let columns = Object.entries(meal).filter(value => value[1] != undefined);
+                                            //         columns.forEach(([key, value]) => {
+                                            //             query += key + " = '" + req.body[key] + "',\r\n";
+                                            //         })
+                                            //         query = query.substring(0, query.length - 3);
+                                            //         query += "\r\nWHERE id = " + req.params.mealId;
 
-                                                    conn.query(
-                                                        query,
-                                                        function (err, results) {
-                                                            if (err) {
-                                                                next(err);
-                                                            } else {
-                                                                meal.id = req.params.mealId;
-                                                                res.status(200).json({
-                                                                    status: 200,
-                                                                    message: "Update Meal",
-                                                                    data: meal
-                                                                });
-                                                            }
-                                                        }
-                                                    );
-                                                }
-                                            }
+                                            //         conn.query(
+                                            //             query,
+                                            //             function (err, results) {
+                                            //                 if (err) {
+                                            //                     next(err);
+                                            //                 } else {
+                                            //                     meal.id = req.params.mealId;
+                                            //                     res.status(200).json({
+                                            //                         status: 200,
+                                            //                         message: "Update Meal",
+                                            //                         data: meal
+                                            //                     });
+                                            //                 }
+                                            //             }
+                                            //         );
+                                            //     }
+                                            // }
                                         }
                                     );
                                 }
