@@ -92,7 +92,7 @@ const mealController = {
                                     next(error);
                                 } else {
                                     conn.query(
-                                        "SELECT m.id FROM meal m WHERE m.id = ? && m.cookId = ? LIMIT 1",
+                                        "SELECT m.id FROM meal m WHERE m.id = ? AND m.cookId = ? LIMIT 1",
                                         [req.params.mealId, req.user.id],
                                         function (err, results) {
                                             if (err) { next(err); } else {
