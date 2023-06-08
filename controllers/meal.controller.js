@@ -252,7 +252,7 @@ const participationController = {
                             error.status = 403
                             next(error);
                         } else {
-                            conn.query("SELECT COUNT(*) AS participantCount FROM meal_participants_user up WHERE up.mealId = ?", [req.params.mealId], function (queryError, participantCount, fields) {
+                            conn.query("SELECT COUNT(*) AS participantCount FROM meal WHERE id = ?", [req.params.mealId], function (queryError, participantCount, fields) {
                                 if (participantCount.participantCount == 0) {
                                     res.status(200).json({
                                         status: 404,
