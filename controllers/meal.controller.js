@@ -86,7 +86,7 @@ const mealController = {
                             [req.params.mealId],
                             function (err, results) {
                                 if (err) { next(err); }
-                                if (results.affectedRows == 0) {
+                                if (results.length == 0) {
                                     let error = new Error("Meal does not exist.");
                                     error.status = 404
                                     next(error);
@@ -102,7 +102,8 @@ const mealController = {
                                                     next(error);
                                                 } else {
                                                     let query = 'UPDATE `meal` SET ';
-                                                    let columns = Object.entries(new Meal(req.body)).filter(value => value[1] != undefined);
+                                                    let meal = new Meal(req.body);
+                                                    let columns = Object.entries(meal).filter(value => value[1] != undefined);
                                                     columns.forEach(([key, value]) => {
                                                         query += key + " = '" + req.body[key] + "',\r\n";
                                                     })
@@ -111,15 +112,15 @@ const mealController = {
 
                                                     conn.query(
                                                         query,
-                                                        [req.params.mealId],
                                                         function (err, results) {
                                                             if (err) {
                                                                 next(err);
                                                             } else {
+                                                                meal.id = req.params.mealId;
                                                                 res.status(200).json({
                                                                     status: 200,
                                                                     message: "Update Meal",
-                                                                    data: results
+                                                                    data: meal
                                                                 });
                                                             }
                                                         }
