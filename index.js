@@ -16,7 +16,7 @@ function responseInterceptor(req, res, next) {
 var originalSend = res.send;
 
 res.send = function(body){
-    body = JSON.stringify(body).replace(/\"isActive\\":1/g,'\"isActive\\":true').replace(/\"isActive\\":0/g,'\"isActive\\":false');
+    body = JSON.stringify(body).replace(/\"isActive\\":1/g,'\"isActive\\":true').replace(/\"isActive\\":0/g,'\"isActive\\":false').replace(/\"isVega\\":1/g,'\"isVega\\":true').replace(/\"isVega\\":0/g,'\"isVega\\":false').replace(/\"isVegan\\":1/g,'\"isVegan\\":true').replace(/\"isVegan\\":0/g,'\"isVegan\\":false').replace(/\"isToTakeHome\\":1/g,'\"isToTakeHome\\":true').replace(/\"isToTakeHome\\":0/g,'\"isToTakeHome\\":false');
     body = JSON.parse(body);
     console.log(body);
     originalSend.call(res, body);
