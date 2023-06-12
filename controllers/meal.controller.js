@@ -212,22 +212,22 @@ const mealController = {
             if (err) { next(err) }
             if (conn) {
                 conn.query(
-                    "SELECT COUNT(*) AS isCook FROM meal m WHERE m.id = ? AND (m.cookId = ? OR m.cookId is NULL) LIMIT 1",
-                    [req.params.mealId, req.user.id],
+                    "DELETE FROM `meal` WHERE id = ?",
+                    [id],
                     function (err, results) {
-                        if (results[0].isCook == 0) {
-                            let error = new Error("User does not have meal.");
-                            error.status = 403
+                        if (results.affectedRows == 0) {
+                            let error = new Error("Meal does not exist.");
+                            error.status = 404
                             next(error);
                         } else {
-                            let query = 'DELETE FROM `meal` WHERE id = ?';
+                            let query = 'SELECT COUNT(*) AS isCook FROM meal m WHERE m.id = ? AND (m.cookId = ? OR m.cookId is NULL) LIMIT 1';
                             conn.query(
                                 query,
-                                [id],
+                                [req.params.mealId, req.user.id],
                                 function (err, results) {
-                                    if (err) { next(err); } else if (results.affectedRows == 0) {
-                                        let error = new Error("Meal does not exist.");
-                                        error.status = 404
+                                    if (err) { next(err); } else if (results[0].isCook == 0) {
+                                        let error = new Error("User does not have meal.");
+                                        error.status = 403
                                         next(error);
                                     } else {
                                         res.status(200).json(
