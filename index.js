@@ -3,8 +3,8 @@ const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
-const userRouter = require('./routes/user.routes');
-app.use("/api", userRouter);
+// const userRouter = require('./routes/user.routes');
+// app.use("/api", userRouter);
 const mealRouter = require('./routes/meal.routes');
 app.use("/api/meal", mealRouter);
 
