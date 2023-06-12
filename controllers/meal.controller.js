@@ -259,10 +259,7 @@ const participationController = {
                                     res.status(200).json({
                                         status: 404,
                                         message: "Meal does not exist. User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
-                                        data: {
-                                            "currentlyParticipating": false,
-                                            "currentAmountOfParticipants": participantCount[0].participantCount
-                                        }
+                                        data: {}
                                     });
                                 } else if (results.affectedRows > 0) {
                                     res.status(200).json({
