@@ -3,13 +3,10 @@ const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
-// const userRouter = require('./routes/user.routes');
-// app.use("/api", userRouter);
-// const mealRouter = require('./routes/meal.routes');
-// app.use("/api/meal", mealRouter);
-app.use('', (req, res, next) => {
-    res.json(req.body);
-})
+const userRouter = require('./routes/user.routes');
+app.use("/api", userRouter);
+const mealRouter = require('./routes/meal.routes');
+app.use("/api/meal", mealRouter);
 
 app.use((err, req, res, next) => {
     // if (err.code != undefined) {
