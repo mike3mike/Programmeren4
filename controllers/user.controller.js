@@ -106,7 +106,7 @@ const userController = {
                         correctParameters.forEach((i, index) => {
                             replaceDict = {"true":"1", "false":"2"};
                             replacedValue = i[1].replace("true", 1).replace("false", "0");
-                            whereQuery += (i[0] + " = " + "'" + i[1] + "'");
+                            whereQuery += (i[0] + " = " + "'" + replacedValue + "'");
                             if (index != correctParameters.length - 1) {
                                 whereQuery += " AND ";
                             }
