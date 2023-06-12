@@ -25,7 +25,7 @@ userRouter.post('', userController.registerUser)
 // // UC-205
 // userRouter.put("/:userId", authController.login, authController.validate, userController.updateUser)
 // // UC-206
-// userRouter.delete("/:userId", authController.validate, userController.deleteUser)
+userRouter.delete("/:userId", authController.validate, userController.deleteUser)
 
 
 module.exports = userRouter;
