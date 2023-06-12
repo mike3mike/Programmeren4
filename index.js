@@ -3,10 +3,34 @@ const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
+// app.use(function (req, res) {
+//     // var send = res.send;
+//     res.send = function (body) {
+//         // body = JSON.stringify(body).replace('"isActive":1','"isActive":true').replace('"isActive":0','"isActive":false');
+//         // body = JSON.parse(body);
+//         console.log(body);
+//         send.call(this, body);
+//     };
+// });
+function responseInterceptor(req, res, next) {
+var originalSend = res.send;
+
+res.send = function(body){
+    body = JSON.stringify(body).replace(/\"isActive\\":1/g,'\"isActive\\":true').replace(/\"isActive\\":0/g,'\"isActive\\":false');
+    body = JSON.parse(body);
+    console.log(body);
+    originalSend.call(res, body);
+};
+next();
+}
+
+app.use(responseInterceptor);
 const userRouter = require('./routes/user.routes');
 app.use("/api", userRouter);
 const mealRouter = require('./routes/meal.routes');
 app.use("/api/meal", mealRouter);
+
+
 
 app.use((err, req, res, next) => {
     // if (err.code != undefined) {
