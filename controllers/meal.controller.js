@@ -213,7 +213,7 @@ const mealController = {
             if (conn) {
                 conn.query(
                     "SELECT COUNT(*) AS isCook FROM meal m WHERE m.id = ? AND (m.cookId = ? OR m.cookId is NULL) LIMIT 1",
-                    [req.params.mealId],
+                    [req.params.mealId, req.user.id],
                     function (err, results) {
                         if (results[0].isCook == 0) {
                             let error = new Error("User does not have meal.");
