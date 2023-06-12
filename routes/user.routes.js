@@ -9,7 +9,7 @@ router.post('/login', authController.login, userController.login)
 router.get('/info', userController.info)
 
 const userRouter = express.Router();
-router.use('/user', userRouter);
+// router.use('/user', userRouter);
 
 // UC-201
 userRouter.post('', userController.registerUser)
