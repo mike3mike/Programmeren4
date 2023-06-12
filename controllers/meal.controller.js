@@ -211,27 +211,38 @@ const mealController = {
         pool.getConnection(function (err, conn) {
             if (err) { next(err) }
             if (conn) {
-                let query = 'DELETE FROM `meal` WHERE id = ?';
                 conn.query(
-                    query,
-                    [id],
+                    "SELECT COUNT(0) AS isCook FROM meal m WHERE m.id = ? AND (m.cookId = ? OR m.cookId is NULL) LIMIT 1",
+                    [req.params.mealId],
                     function (err, results) {
-                        if (err) { next(err); } else if (results.affectedRows == 0) {
-                            let error = new Error("Meal does not exist.");
-                            error.status = 404
+                        if (results[0].isCook == 0) {
+                            let error = new Error("User does not have meal.");
+                            error.status = 403
                             next(error);
                         } else {
-                            res.status(200).json(
-                                {
-                                    status: 200,
-                                    message: "Maaltijd met ID " + id + " is verwijderd",
-                                    data: {}
+                            let query = 'DELETE FROM `meal` WHERE id = ?';
+                            conn.query(
+                                query,
+                                [id],
+                                function (err, results) {
+                                    if (err) { next(err); } else if (results.affectedRows == 0) {
+                                        let error = new Error("Meal does not exist.");
+                                        error.status = 404
+                                        next(error);
+                                    } else {
+                                        res.status(200).json(
+                                            {
+                                                status: 200,
+                                                message: "Maaltijd met ID " + id + " is verwijderd",
+                                                data: {}
+                                            }
+                                        )
+                                    };
                                 }
-                            )
-                        };
-                    }
-                );
-                pool.releaseConnection(conn);
+                            );
+                        }
+                        pool.releaseConnection(conn);
+                    })
             }
         });
     }
