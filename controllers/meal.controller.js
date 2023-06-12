@@ -255,7 +255,7 @@ const participationController = {
                         } else {
                             conn.query("SELECT COUNT(*) AS participantCount FROM meal m WHERE m.id = ?", [req.params.mealId], function (queryError, participantCount, fields) {
                                 console.log("MealCount = " + JSON.stringify(participantCount));
-                                if (participantCount.participantCount == 0) {
+                                if (participantCount[0].participantCount == 0) {
                                     res.status(200).json({
                                         status: 404,
                                         message: "Meal does not exist. User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
@@ -309,14 +309,15 @@ const participationController = {
                                     message: "No data data matched.",
                                     data: []
                                 });
+                            } else {
+                                res.status(200).json(
+                                    {
+                                        status: 200,
+                                        message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
+                                        data: { results }
+                                    }
+                                )
                             }
-                            res.status(200).json(
-                                {
-                                    status: 200,
-                                    message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
-                                    data: { results }
-                                }
-                            )
                         };
                     }
                 );
