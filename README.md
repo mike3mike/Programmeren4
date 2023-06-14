@@ -16,7 +16,6 @@ DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT
 ## Usage
 Run the application by executing 'npm run dev' in the command line.
 
-Example:
 A POST request to localhost:3000/api/user
 With the data body filled in:
 {
