@@ -41,7 +41,7 @@ describe('UC-101', () => {
             })
     })
 
-    it.only("2 - Wrong password", (done) => {
+    it("2 - Wrong password", (done) => {
         chai
             .request(server)
             .post("/api/login")
