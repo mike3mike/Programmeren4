@@ -15,7 +15,6 @@ class User {
         //     this.isActive = false;
         // };
         this.isActive = isActive;
-        console.log(this.isActive);
         this.roles = roles;
         if (password) { 
             this.setPassword(password); 
@@ -111,7 +110,11 @@ class User {
         //     var token = jwt.sign({ userId: this.id }, secret);
         //     return token;
         // };
-        throw new Error("Wrong password");
+        else {
+            let error = new Error("Passwords do not match");
+            error.status = 400
+            throw error;
+        }
     }
 
     // getPasswordHash() {

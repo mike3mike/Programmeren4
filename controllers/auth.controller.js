@@ -6,42 +6,48 @@ module.exports = {
         // Used to check emailAdress and password validity
         new User(req.body);
         if (emailAdress == null) {
-            let error = new Error("emailAdress is required");
+            let error = new Error("EmailAdress is required");
             error.status = 400
             next(error);
-        }
-        const pool = require('../Database');
-        pool.getConnection(function (connectionError, conn) {
-            if (connectionError) {
-                return null;
-            }
-            if (conn) {
-                let query = "SELECT * FROM `user` WHERE emailAdress = ?";
-                let values = [emailAdress];
-                // if (req.params.userId != undefined) {
-                //     query += " OR id = ?";
-                //     values.push(req.params.userId);
-                // }
-                conn.query(
-                    query,
-                    values,
-                    function (queryError, results, fields) {
-                        if (queryError) return null;
-                        if (results.length == 0) {
-                            let error = new Error("User does not exist");
-                            error.status = 404
-                            next(error);
-                        } else {
-                            var user = new User(results[0]);
-                            user.setJWTtoken(password);
-                            req.user = user;
-                            next();
+        } else if (password == null) {
+            let error = new Error("Password is required");
+            error.status = 400
+            next(error);
+        } else {
+            const pool = require('../Database');
+            pool.getConnection(function (connectionError, conn) {
+                if (connectionError) {
+                    return next(connectionError);
+                }
+                if (conn) {
+                    let query = "SELECT * FROM `user` WHERE emailAdress = ?";
+                    let values = [emailAdress];
+                    conn.query(
+                        query,
+                        values,
+                        function (queryError, results, fields) {
+                            if (queryError) return null;
+                            if (results.length == 0) {
+                                let error = new Error("User does not exist");
+                                error.status = 404
+                                next(error);
+                            } else {
+                                var user = new User(results[0]);
+                                try {
+                                    user.setJWTtoken(password);
+                                } catch (e) {
+                                    next(e);
+                                } finally {
+                                    req.user = user;
+                                    next();
+                                }
+                            }
                         }
-                    }
-                );
-                pool.releaseConnection(conn);
-            }
-        });
+                    );
+                    pool.releaseConnection(conn);
+                }
+            });
+        }
     },
 
     validate(req, res, next) {
