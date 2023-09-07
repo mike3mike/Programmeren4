@@ -164,7 +164,7 @@ const mealController = {
                             error.status = 403
                             next(error);
                         } else {
-                            res.status(201).json({
+                            res.status(200).json({
                                 status: 200,
                                 message: "Get meal list",
                                 data: results
@@ -268,34 +268,41 @@ const participationController = {
                             error.status = 403
                             next(error);
                         } else {
-                            conn.query("SELECT COUNT(*) AS participantCount FROM meal m WHERE m.id = ?", [req.params.mealId], function (queryError, participantCount, fields) {
-                                console.log("MealCount = " + JSON.stringify(participantCount));
-                                if (participantCount[0].participantCount == 0) {
-                                    res.status(200).json({
-                                        status: 404,
-                                        message: "Meal does not exist. User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
-                                        data: {}
-                                    });
-                                } else if (results.affectedRows > 0) {
-                                    res.status(200).json({
-                                        status: 200,
-                                        message: "User met ID " + req.user.id + " is aangemeld voor maaltijd met ID " + req.params.mealId,
-                                        data: {
-                                            "currentlyParticipating": true,
-                                            "currentAmountOfParticipants": participantCount[0].participantCount
-                                        }
-                                    });
-                                } else {
-                                    res.status(200).json({
-                                        status: 200,
-                                        message: "User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
-                                        data: {
-                                            "currentlyParticipating": false,
-                                            "currentAmountOfParticipants": participantCount[0].participantCount
-                                        }
-                                    });
+                            conn.query(
+                                "SELECT COUNT(*) AS mealCount FROM meal m WHERE m.id = ?",
+                                [req.params.mealId],
+                                function (err, mealCount) {
+                                    if (mealCount[0].mealCount == 0) {
+                                        res.status(404).json({
+                                            status: 404,
+                                            message: "Meal does not exist.",
+                                            data: {}
+                                        });
+                                    } else {
+                                        conn.query("SELECT COUNT(*) AS participantCount FROM meal m WHERE m.id = ?", [req.params.mealId], function (queryError, participantCount, fields) {
+                                            if (results.affectedRows > 0) {
+                                                res.status(200).json({
+                                                    status: 200,
+                                                    message: "User met ID " + req.user.id + " is aangemeld voor maaltijd met ID " + req.params.mealId,
+                                                    data: {
+                                                        "currentlyParticipating": true,
+                                                        "currentAmountOfParticipants": participantCount[0].participantCount
+                                                    }
+                                                });
+                                            } else {
+                                                res.status(200).json({
+                                                    status: 200,
+                                                    message: "User met ID " + req.user.id + " is niet aangemeld voor maaltijd met ID " + req.params.mealId,
+                                                    data: {
+                                                        "currentlyParticipating": false,
+                                                        "currentAmountOfParticipants": participantCount[0].participantCount
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
                                 }
-                            });
+                            );
                         }
                     }
                 );
@@ -309,27 +316,57 @@ const participationController = {
         pool.getConnection(function (err, conn) {
             if (err) { next(err) }
             if (conn) {
-                let query = 'DELETE FROM `meal_participants_user` WHERE mealId = ? AND userId = ?';
+                let query = "SELECT COUNT(*) AS deletedCount FROM `meal` WHERE id = ?";
                 conn.query(
                     query,
-                    [mealId, req.user.id],
-                    function (err, results) {
+                    [req.params.mealId],
+                    function (err, resultsAfterDelete) {
                         if (err) { next(err); } else {
-                            if (results.affectedRows == 0) {
-                                res.status(404).json({
-                                    status: 404,
-                                    message: "No data data matched.",
-                                    data: []
-                                });
-                            } else {
-                                res.status(200).json(
-                                    {
-                                        status: 200,
-                                        message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
-                                        data: { results }
-                                    }
-                                )
-                            }
+                            let query = 'DELETE FROM `meal_participants_user` WHERE mealId = ? AND userId = ?';
+                            conn.query(
+                                query,
+                                [mealId, req.user.id],
+                                function (err, results) {
+                                    if (err) { next(err); } else {
+                                        if (resultsAfterDelete[0].deletedCount == 0) {
+                                            res.status(404).json({
+                                                status: 404,
+                                                message: "Meal does not exist",
+                                                data: []
+                                            });
+                                        } else if (results.affectedRows == 0) {
+                                            res.status(404).json({
+                                                status: 404,
+                                                message: "Participation does not exist.",
+                                                data: []
+                                            });
+                                        } else {
+                                            res.status(200).json(
+                                                {
+                                                    status: 200,
+                                                    message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
+                                                    data: { results }
+                                                }
+                                            )
+                                        }
+                                    };
+                                }
+                            );
+                            // if (results.affectedRows == 0) {
+                            //     res.status(404).json({
+                            //         status: 404,
+                            //         message: "No data data matched.",
+                            //         data: []
+                            //     });
+                            // } else {
+                            //     res.status(200).json(
+                            //         {
+                            //             status: 200,
+                            //             message: "User met ID " + req.user.id + " is afgemeld voor maaltijd met ID " + mealId,
+                            //             data: { results }
+                            //         }
+                            //     )
+                            // }
                         };
                     }
                 );

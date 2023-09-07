@@ -3,6 +3,7 @@ const chaiHttp = require('chai-http');
 const server = require('../index');
 const assert = require('assert');
 const pool = require('../Database');
+const expect = chai.expect;
 
 chai.should();
 chai.use(chaiHttp);
@@ -35,8 +36,14 @@ describe('UC-101', () => {
                 emailAdress: "janesmith@email.com"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(400);
-                res.body.message.should.equals("Password is required");
+                res.body.message.should.be.a('string').eql("Password is required");
                 done();
             })
     })
@@ -50,7 +57,13 @@ describe('UC-101', () => {
                 password: "Testtugest111"
             })
             .end((err, res) => {
-                res.body.message.should.equals("Passwords do not match");
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
+                res.body.message.should.be.a('string').eql("Passwords do not match");
                 res.status.should.equals(400);
                 done();
             })
@@ -66,8 +79,14 @@ describe('UC-101', () => {
                 password: "Testtest123"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(404);
-                res.body.message.should.equals("User does not exist");
+                res.body.message.should.be.a('string').eql("User does not exist");
                 done();
             })
 
@@ -82,8 +101,24 @@ describe('UC-101', () => {
                 password: "Testtest123"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
                 res.status.should.equals(200);
-                res.body.message.should.equals("Login Succesful");
+                res.body.message.should.be.a('string').eql("Login Succesful");
+                data.should.be.an('object');
+                data.should.have.property('firstName');
+                data.should.have.property('lastName');
+                data.should.have.property('isActive');
+                data.should.have.property('emailAdress');
+                data.should.have.property('phoneNumber');
+                data.should.have.property('roles');
+                data.should.have.property('street');
+                data.should.have.property('city');
+                data.should.have.property('token');
                 token = res.body.data.token;
                 done();
             })
@@ -116,8 +151,14 @@ describe('UC-201', () => {
                 phoneNumber: "0615601357"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(400);
-                res.body.message.should.equals("Not every required attribute is present");
+                res.body.message.should.be.a('string').eql("Not every required attribute is present");
                 done();
             })
     })
@@ -136,8 +177,14 @@ describe('UC-201', () => {
                 phoneNumber: "0615601357"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(400);
-                res.body.message.should.equals("Wrong email address: @mike@gmail.com");
+                res.body.message.should.be.a('string').eql("Wrong email address: @mike@gmail.com");
                 done();
             })
     })
@@ -156,6 +203,12 @@ describe('UC-201', () => {
                 phoneNumber: "0615601357"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(400);
                 res.body.message.substring(0, 14).should.equals("Wrong password");
                 done();
@@ -177,6 +230,12 @@ describe('UC-201', () => {
                 roles: "admin"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(403);
                 res.body.message.substring(0,15).should.equals("Duplicate entry");
                 done();
@@ -198,8 +257,14 @@ describe('UC-201', () => {
                 roles: "admin"
             })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
                 res.status.should.equals(201);
-                res.body.message.should.equals("Register user");
+                res.body.message.should.be.a('string').eql("Register user");
                 done();
             })
     })
@@ -224,6 +289,12 @@ describe('UC-202', () => {
             .get("/api/user")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
                 res.status.should.equals(200);
                 done();
             })
@@ -235,6 +306,12 @@ describe('UC-202', () => {
             .get("/api/user?nonExisting=Mike&nonExisting2=Leijten")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(200);
                 res.body.data.should.deep.equal({});
                 done();
@@ -247,6 +324,12 @@ describe('UC-202', () => {
             .get("/api/user?isActive=true")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
                 res.status.should.equals(200);
                 let isEqual = res.body.data.filter(i => i.isActive == 1).length == res.body.data.length;
                 isEqual.should.equals(true);
@@ -260,6 +343,12 @@ describe('UC-202', () => {
             .get("/api/user?isActive=false")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(200);
                 let isEqual = res.body.data.filter(i => i.isActive == 0).length == res.body.data.length;
                 isEqual.should.equals(true);
@@ -273,6 +362,12 @@ describe('UC-202', () => {
             .get("/api/user?firstName=Mike&emailAdress=m.leijten@gmail.com")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
                 res.status.should.equals(200);
                 res.body.data[0].firstName.should.equals("Mike");
                 res.body.data[0].emailAdress.should.equals("m.leijten@gmail.com");
@@ -300,6 +395,12 @@ describe('UC-203', () => {
             .get("/api/user/profile")
             .set({ Authorization: `Bearer 12345` })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(401);
                 done();
             })
@@ -311,6 +412,22 @@ describe('UC-203', () => {
             .get("/api/user/profile")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
+                data.should.be.a('object');
+                data.should.have.property('id');
+                data.should.have.property('firstName');
+                data.should.have.property('lastName');
+                data.should.have.property('isActive');
+                data.should.have.property('emailAdress');
+                data.should.have.property('phoneNumber');
+                data.should.have.property('roles');
+                data.should.have.property('street');
+                data.should.have.property('city');
                 res.status.should.equals(200);
                 done();
             })
@@ -337,8 +454,14 @@ describe('UC-204', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({emailAdress: "u.leijten@gmail.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(404);
-                res.body.message.should.equals("User does not exist");
+                res.body.message.should.be.a('string').eql("User does not exist");
                 done();
             })
     })
@@ -349,6 +472,19 @@ describe('UC-204', () => {
             .get("/api/user/3")
             .set({ Authorization: `Bearer ` + token })
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
+                data.should.have.property('firstName');
+                data.should.have.property('lastName');
+                data.should.have.property('emailAdress');
+                data.should.have.property('phoneNumber');
+                data.should.have.property('roles');
+                data.should.have.property('street');
+                data.should.have.property('city');
                 res.status.should.equals(200);
                 done();
             })
@@ -375,6 +511,12 @@ describe('UC-205', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.body.message.should.equal("EmailAdress is required");
                 res.status.should.equals(400);
                 done();
@@ -388,6 +530,12 @@ describe('UC-205', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({emailAdress: "m.leijten@gmail.com", password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.body.message.should.equal("You need to be the owner.");
                 res.status.should.equals(403);
                 done();
@@ -401,6 +549,12 @@ describe('UC-205', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({emailAdress: "m.leijten@gmail.com", password: "Testtest123", phoneNumber: "06765436887"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.body.message.should.equal("Wrong phonenumber");
                 res.status.should.equals(400);
                 done();
@@ -414,6 +568,12 @@ describe('UC-205', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({emailAdress: "m.leijteno@example.com", password: "Testtest123", street: "aStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.body.message.should.equal("User does not exist");
                 res.status.should.equals(404);
                 done();
@@ -426,6 +586,12 @@ describe('UC-205', () => {
         .put("/api/user/2386")
         .send({emailAdress: "mikeleijten1@gmail.com", password: "Testtest123", street: "aStreet"})
         .end((err, res) => {
+            let { status, message, data } = res.body;
+            expect(status).to.exist;
+            expect(message).to.exist;
+            expect(data).to.exist;
+            res.body.should.be.an('object');
+            Object.keys(data).length.should.be.equal(0);
             res.body.message.should.equal("Include a bearer token in the authorization header. The format is 'Bearer {token}'.");
             res.status.should.equals(401);
             done()
@@ -440,7 +606,22 @@ describe('UC-205', () => {
             // Other than emailAdress and password, you can add data that you would like to change
             .send({emailAdress: "janesmith@email.com", password: "Testtest123", street: "aNewStreet"})
             .end((err, res) => {
-            res.body.message.should.equal("Update User");
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                expect(data).to.not.be.empty;
+                res.body.message.should.equal("Update User");
+                data.should.have.property('id');
+                data.should.have.property('firstName');
+                data.should.have.property('lastName');
+                data.should.have.property('isActive');
+                data.should.have.property('emailAdress');
+                data.should.have.property('phoneNumber');
+                data.should.have.property('roles');
+                data.should.have.property('street');
+                data.should.have.property('city');
                 res.status.should.equals(200);
                 done();
             })
@@ -467,6 +648,12 @@ describe('UC-206', () => {
             .set({ Authorization: `Bearer ` + token })
             .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.status.should.equals(404);
                 res.body.message.should.equal("User does not exist");
                 done();
@@ -479,6 +666,12 @@ describe('UC-206', () => {
             .delete("/api/user/2399")
             .send({emailAdress: "mike34akklssdfjkgd3@example.com", password: "newPassword", street: "aNewStreet"})
             .end((err, res) => {
+                let { status, message, data } = res.body;
+                expect(status).to.exist;
+                expect(message).to.exist;
+                expect(data).to.exist;
+                res.body.should.be.an('object');
+                Object.keys(data).length.should.be.equal(0);
                 res.body.message.should.equal("Include a bearer token in the authorization header. The format is 'Bearer {token}'.");
                 res.status.should.equals(401);
                 done()
@@ -492,6 +685,12 @@ describe('UC-206', () => {
         .set({ Authorization: `Bearer ` + token })
         .send({emailAdress: "m.leijten3@student.avans.nl", password: "Testtest123", street: "aNewStreet"})
         .end((err, res) => {
+            let { status, message, data } = res.body;
+            expect(status).to.exist;
+            expect(message).to.exist;
+            expect(data).to.exist;
+            res.body.should.be.an('object');
+            Object.keys(data).length.should.be.equal(0);
             res.body.message.should.equal("You need to be the owner.");
             res.status.should.equals(403);
             done();
@@ -505,6 +704,12 @@ describe('UC-206', () => {
         .set({ Authorization: `Bearer ` + token })
         .send({emailAdress: "janesmith@email.com", password: "Testtest123", street: "aNewStreet"})
         .end((err, res) => {
+            let { status, message, data } = res.body;
+            expect(status).to.exist;
+            expect(message).to.exist;
+            expect(data).to.exist;
+            res.body.should.be.an('object');
+            Object.keys(data).length.should.be.equal(0);
             res.status.should.equals(200);
             done();
         })
